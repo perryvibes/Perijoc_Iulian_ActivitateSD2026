@@ -49,18 +49,16 @@ void afisareVectorMasini(Masina* masini, int nrMasini) {
 void adaugaMasinaInVector(Masina** masini, int* nrMasini, Masina masinaNoua) {
 	//adauga in vectorul primit o noua masina pe care o primim ca parametru
 	//ATENTIE - se modifica numarul de masini din vector;
-	Masina** aux = malloc( (sizeof(Masina*) * (*nrMasini)) + 1);
-	for (int i = 0; i < *nrMasini; i++) {
-		aux[i] = masini[i];
-	}
-	*aux[(*nrMasini)] = masinaNoua;
-	masini = aux; // shallow copy
-	*nrMasini++;
+
 }
 
 Masina citireMasinaFisier(FILE* file) {
-	//functia citeste o masina dintr-un strceam deja deschis
+	//functia citeste o masina dintr-un stream deja deschis
 	//masina citita este returnata;
+	Masina* masinaFisier = malloc(sizeof(Masina));
+	file = fopen("masini.txt", "r");
+	fgets(masinaFisier, 1, file);
+	return *masinaFisier;
 }
 
 Masina* citireVectorMasiniFisier(const char* numeFisier, int* nrMasiniCitite) {
@@ -98,6 +96,11 @@ int main() {
 	Masina random = InitializareManuala(6, 5, 4000, "Sportage", "Badescu", 'J');
 	adaugaMasinaInVector(&masini, &nrMasini, random);
 	afisareVectorMasini(masini, nrMasini);
+
+	printf("\n----------------------------------------------------\n");
+	
+	FILE fptr;
+	afisareMasina(citireMasinaFisier(&fptr));
 
 	return 0;
 }

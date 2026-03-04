@@ -152,11 +152,11 @@ int main() {
 	//printf("\n---------------------------------------------------");
 	
 	Masina* masini = NULL;
-	int nrMasini = 0;
+	int nrMasini = 0; 
 	
 	masini = citireVectorMasiniFisier("masini.txt", &nrMasini);
 	afisareVectorMasini(masini, nrMasini);
-	
+	//dezalocareVectorMasini(&masini, nrMasini); // Eroare exit code -...... Din cauza nrMasini = 0 
 	printf("\n---------------------------------------------------");
 
 	return 0;

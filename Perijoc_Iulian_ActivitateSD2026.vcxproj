@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt" />
+    <Text Include="masini2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -229,6 +229,5 @@ int main() {
 	afisareListaMasini(cap);
 	
 	dezalocareListaMasini(&cap);
-
 	return 0;
 }

@@ -88,7 +88,7 @@ void adaugaLaInceputInLista(Nod** cap, Masina masinaNoua) {
 	//adauga la inceputul listei o noua masina pe care o primim ca parametru
 	Nod* nou = (Nod*)malloc(sizeof(Nod));
 	nou->info = masinaNoua;
-	nou->next = cap;
+	nou->next = *cap;
 	(*cap) = nou;
 }
 
@@ -100,18 +100,6 @@ void* citireListaMasiniDinFisier(const char* numeFisier) {
 	Nod* lista = NULL;
 	while (!feof(fptr)) {
 		adaugaMasinaInLista(&lista, citireMasinaDinFisier(fptr));
-	}
-	fclose(fptr);
-	return lista;
-}
-void* citireListaMasiniDinFisier1(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
-	FILE* fptr = fopen(numeFisier, "r");
-	Nod* lista = NULL;
-	while (!feof(fptr)) {
-		adaugaLaInceputInLista(&lista, citireMasinaDinFisier(fptr));
 	}
 	fclose(fptr);
 	return lista;

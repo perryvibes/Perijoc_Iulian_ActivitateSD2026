@@ -214,20 +214,27 @@ int main() {
 	cap = citireListaMasiniDinFisier("masini2.txt");
 	afisareListaMasini(cap);
 
+	printf("\n=====================================\n");
+
 	float pretMediu = calculeazaPretMediu(cap);
 	printf("Pret mediu este: %5.2f\n", pretMediu);
 
 	float pretSofer = calculeazaPretulMasinilorUnuiSofer(cap, "Ionescu");
 	printf("Pretul masinilor lui Ionescu este: %5.2f", pretSofer);
 
-	printf("\n%s", getCeaMaiScumpaMasina(cap));
+	printf("\nCea mai scumpa masina: %s", getCeaMaiScumpaMasina(cap));
+
+	printf("\n=====================================\n");
 
 	char serieCautata = 'A';
 
 	stergeMasiniDinSeria(&cap, serieCautata);
 	printf("Seria dupa stergere: \n");
 	afisareListaMasini(cap);
+
+	printf("\n=====================================\n");
 	
 	dezalocareListaMasini(&cap);
+	
 	return 0;
 }

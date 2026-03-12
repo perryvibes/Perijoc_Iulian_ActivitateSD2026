@@ -3,6 +3,7 @@
 //#include <stdlib.h>
 //#include <string.h>
 //
+//// Liste simple
 ////trebuie sa folositi fisierul masini.txt
 ////sau va creati un alt fisier cu alte date
 //

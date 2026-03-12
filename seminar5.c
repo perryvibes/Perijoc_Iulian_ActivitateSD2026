@@ -136,31 +136,121 @@ ListaDubla citireLDMasiniDinFisier(const char* numeFisier) {
 	return lista;
 }
 
-void dezalocareLDMasini(/*lista dubla de masini*/) {
-	//sunt dezalocate toate masinile si lista dublu inlantuita de elemente
+void dezalocareLDMasini(ListaDubla* lista) {
+	Nod* p = lista->first;
+	while (p) {
+		Nod* aux = p;
+		p = p->next;
+		if (aux->masina.model != NULL) {
+			free(aux->masina.model);
+		}
+		if (aux->masina.numeSofer != NULL) {
+			free(aux->masina.numeSofer);
+		}
+		free(aux);
+	}
+	initializareListaNull(lista);
 }
 
-float calculeazaPretMediu(/*lista de masini*/) {
+float calculeazaPretMediu(ListaDubla* lista) {
 	//calculeaza pretul mediu al masinilor din lista.
+	if (lista->nrNoduri > 0) {
+		Nod* p = lista->first;
+		float sum = 0.0;
+		while (p) {
+			sum += p->masina.pret;
+			p = p->next;
+		}
+		return sum/lista->nrNoduri;
+	}
 	return 0;
 }
 
-void stergeMasinaDupaID(/*lista masini*/ int id) {
+void stergeMasinaDupaID(ListaDubla* lista, int id) {
+	
 	//sterge masina cu id-ul primit.
 	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
+	
+	if (lista->nrNoduri == 0) return;
+	Nod* p = lista->first;
+	while (p && p->masina.id != id){
+		p = p->next;
+	}
+	// am iesit din while si suntem pe nodul pe care vrem sa-l stergem
+	if (p == NULL) return;
+	
+	// tratam cazul pentru primul nod din lista
+	if (p->prev == NULL) {
+		lista->first = p->next;
+		if (lista->first) {
+			lista->first->prev = NULL;
+		}
+	}
+	else {
+		p->prev->next = p->next;
+	}
+
+	// tratam cazul pentru ultimul nod din lista
+	if (p->next == NULL) {
+		lista->last = p->prev;
+	}
+	else {
+		p->next->prev = p->prev;
+	}
+	if (p->masina.model != NULL) {
+		free(p->masina.model);
+	}
+	if (p->masina.numeSofer != NULL) {
+		free(p->masina.numeSofer);
+	}
+	free(p);
+	lista->nrNoduri--;
 }
 
-char* getNumeSoferMasinaScumpa(/*lista dublu inlantuita*/) {
+char* getNumeSoferMasinaScumpa(ListaDubla* lista) {
 	//cauta masina cea mai scumpa si 
 	//returneaza numele soferului acestei maasini.
-	return NULL;
+	if (lista->first) {
+		Nod* max = lista->first;
+		Nod* p = lista->first;
+		while (p) {
+			if (p->masina.pret > max->masina.pret) {
+				max = p;
+			}
+			p = p->next;
+		}
+		char* nume = (char*)malloc(sizeof(max->masina.numeSofer) + 1);
+		strcpy_s(nume, sizeof(max->masina.numeSofer)+1, max->masina.numeSofer);
+		return nume;
+	}
+	else {
+		return NULL;
+	}
 }
-
 int main() {
+
 	ListaDubla list1 = citireLDMasiniDinFisier("masini.txt");
 	afisareListaMasiniInceput(list1);
 	printf("------------------------\n");
+
+	// Stergere
+	stergeMasinaDupaID(&list1, 6);
+
 	afisareListaMasiniSfarsit(list1);
-	// TO DO de la DEZALOCARE!!
+	
+
+	printf("------------------------\n");
+	printf("Pretul mediu al masinilor este: %.2f\n",calculeazaPretMediu(&list1));
+
+	printf("------------------------\n");
+	
+	char* numeSofer = getNumeSoferMasinaScumpa(&list1);
+	printf("Soferul cu cea mai scumpa masina este: %s\n", numeSofer);
+
+	if (numeSofer != NULL) {
+		free(numeSofer);
+	}
+
+	dezalocareLDMasini(&list1);
 	return 0;
 }

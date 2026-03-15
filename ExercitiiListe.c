@@ -3,24 +3,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct {
+struct Carte {
 	int id;
 	char* denumire;
 	char* autor;
 	float pret;
-} Carte;
+};
+typedef struct Carte Carte;
 
-typedef struct {
+struct Nod {
 	Carte info;
 	struct Nod* prev;
 	struct Nod* next;
-} Nod;
+};
+typedef struct Nod Nod;
 
-typedef struct {
+struct ListaDubla {
 	Nod* head;
 	Nod* tail;
 	int nrNoduri;
-} ListaDubla;
+};
+typedef struct ListaDubla ListaDubla;
 
 void afisareCarte(Carte c) {
 	printf("\nId: %d\n", c.id);
@@ -42,11 +45,11 @@ Carte initializareCarte(int _id, const char* _den, const char* _autor, float _pr
 
 Carte citireCarteFisier(FILE* f) {
 	Carte c;
-	char buffer[100];
+	char buffer[100]; 
 	char delimitator[3] = ",\n";
-	fgets(buffer,100,f);
+	fgets(buffer,100,f); 
 	char* token;
-	token = strtok(buffer,delimitator);
+	token = strtok(buffer,delimitator); // de verif flow lin 45-49 deeper
 	c.id = atoi(token);
 	token = strtok(NULL,delimitator);
 	c.denumire = malloc(sizeof(char)*strlen(token)+1);
@@ -59,7 +62,51 @@ Carte citireCarteFisier(FILE* f) {
 	return c;
 }
 
-void dezalocare(Carte x) {
+void adaugareCartiInListaSfarsit(ListaDubla* lista, Carte carte){
+		Nod* aux = (Nod*)malloc(sizeof(Nod));
+		aux->info = carte;
+		aux->next = NULL;
+		aux->prev = lista->tail;
+		if (lista->tail != NULL) {
+			lista->tail->next = aux;
+		} else {
+			lista->head = aux;
+		}
+		lista->tail = aux;
+		lista->nrNoduri++;
+}
+
+void adaugareCartiInListaInceput(ListaDubla* lista, Carte carte) {
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	nou->info = carte;
+	nou->prev = NULL;
+	nou->next = lista->head;
+	if(lista->head != NULL) {
+		lista->head->prev = nou;
+	} else {
+		lista->tail = nou;
+	}
+	lista->head = nou;
+	lista->nrNoduri++;
+}
+
+void afisareListaCartiFirst(ListaDubla* lista) {
+	Nod* p =  lista->head;
+	while(p) {
+		afisareCarte(p->info);
+		p = p->next;
+	}
+}
+
+void afisareListaCartiEnd(ListaDubla* lista) {
+	Nod* p = lista->tail;
+	while(p) {
+		afisareCarte(p->info);
+		p = p->prev;
+	}
+}
+
+void dezalocare1(Carte x) {
 	printf("\nDEZALOCARE\n");
 	if (x.autor != NULL) {
 		free(x.autor);
@@ -77,15 +124,19 @@ int main() {
 
 	// Carte c1 = initializareCarte(1,"Shrek","Anonim",29.33);
 	// afisareCarte(c1);
-	// dezalocare(c1);
+	// dezalocare1(c1);
 
+
+	ListaDubla listaCarti;
 	FILE* f = fopen("carti.txt", "r");
 	while(!feof(f)) {
-		afisareCarte(citireCarteFisier(f));
+		adaugareCartiInListaSfarsit(&listaCarti,citireCarteFisier(f));
 	}
+	afisareListaCartiFirst(&listaCarti);
 	// Carte c = citireCarteFisier(f);
 	// afisareCarte(c);
-
+	
+	fclose(f);
 
     return 0;
 }

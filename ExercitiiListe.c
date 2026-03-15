@@ -3,74 +3,89 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-struct StructuraMasina {
+typedef struct {
 	int id;
-	int nrUsi;
+	char* denumire;
+	char* autor;
 	float pret;
-	char* model;
-	char* numeSofer;
-	unsigned char serie;
-};
-typedef struct StructuraMasina Masina;
+} Carte;
 
-//creare structura pentru un nod dintr-o lista dublu inlantuita
-typedef struct Nod Nod;
+typedef struct {
+	Carte info;
+	struct Nod* prev;
+	struct Nod* next;
+} Nod;
 
-struct Nod {
-	Masina masina;
-	Nod* next;
-	Nod* prev;
-};
-
-//creare structura pentru Lista Dubla 
-typedef struct ListaDubla ListaDubla;
-
-struct ListaDubla {
-	Nod* first;
-	Nod* last;
+typedef struct {
+	Nod* head;
+	Nod* tail;
 	int nrNoduri;
-};
+} ListaDubla;
 
-Masina citireMasinaDinFisier(FILE* file) {
-	char buffer[100];
-	char sep[3] = ",\n";
-	fgets(buffer, 100, file);
-	char* aux;
-	Masina m1;
-	aux = strtok(buffer, sep);
-	m1.id = atoi(aux);
-	m1.nrUsi = atoi(strtok(NULL, sep));
-	m1.pret = atof(strtok(NULL, sep));
-	aux = strtok(NULL, sep);
-	m1.model = malloc(strlen(aux) + 1);
-	strncpy(m1.model, aux, strlen(aux) + 1);
-
-	aux = strtok(NULL, sep);
-	m1.numeSofer = malloc(strlen(aux) + 1);
-	strncpy(m1.numeSofer, aux, strlen(aux) + 1);
-
-	m1.serie = *strtok(NULL, sep);
-	return m1;
+void afisareCarte(Carte c) {
+	printf("\nId: %d\n", c.id);
+	printf("Denumire: %s\n", c.denumire);
+	printf("Autor: %s\n", c.autor);
+	printf("Pret: %.2f\n", c.pret);
 }
 
-void afisareMasina(Masina masina) {
-	printf("Id: %d\n", masina.id);
-	printf("Nr. usi : %d\n", masina.nrUsi);
-	printf("Pret: %.2f\n", masina.pret);
-	printf("Model: %s\n", masina.model);
-	printf("Nume sofer: %s\n", masina.numeSofer);
-	printf("Serie: %c\n\n", masina.serie);
+Carte initializareCarte(int _id, const char* _den, const char* _autor, float _pret) {
+	Carte c;
+	c.id = _id;
+	c.denumire = malloc(sizeof(char)*sizeof(_den)+1);
+	strncpy(c.denumire, _den, sizeof(char)*sizeof(_den)+1);
+	c.autor = malloc(sizeof(char)*sizeof(_autor)+1);
+	strncpy(c.autor, _autor, sizeof(char)*sizeof(_autor)+1);
+	c.pret = _pret;
+	return c;
+}
+
+Carte citireCarteFisier(FILE* f) {
+	Carte c;
+	char buffer[100];
+	char delimitator[3] = ",\n";
+	fgets(buffer,100,f);
+	char* token;
+	token = strtok(buffer,delimitator);
+	c.id = atoi(token);
+	token = strtok(NULL,delimitator);
+	c.denumire = malloc(sizeof(char)*strlen(token)+1);
+	strncpy(c.denumire, token, sizeof(char)*strlen(token)+1);
+	token = strtok(NULL, delimitator);
+	c.autor = malloc(sizeof(char)*strlen(token)+1);
+	strncpy(c.autor, token, sizeof(char)*strlen(token)+1);
+	token = strtok(NULL,delimitator);
+	c.pret = atof(token);
+	return c;
+}
+
+void dezalocare(Carte x) {
+	printf("\nDEZALOCARE\n");
+	if (x.autor != NULL) {
+		free(x.autor);
+	} else if (x.denumire != NULL)
+	{
+		free(x.denumire);
+	} else {
+		x.denumire = NULL;
+		x.autor = NULL;
+	}
 }
 
 
 int main() {
 
-    FILE* f = fopen("masini.txt","r");
-    Masina m1;
-    while(!feof(f)) {
-        m1 = citireMasinaDinFisier(f);
-        afisareMasina(m1);
-    }
+	// Carte c1 = initializareCarte(1,"Shrek","Anonim",29.33);
+	// afisareCarte(c1);
+	// dezalocare(c1);
+
+	FILE* f = fopen("carti.txt", "r");
+	while(!feof(f)) {
+		afisareCarte(citireCarteFisier(f));
+	}
+	// Carte c = citireCarteFisier(f);
+	// afisareCarte(c);
+
+
     return 0;
 }

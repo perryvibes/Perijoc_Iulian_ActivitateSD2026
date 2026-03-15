@@ -1,0 +1,10 @@
+1,Iubitul,Freida McFadden,38.21
+2,Profesoara,Freida McFadden,32.42
+3,Detinutul,Freida McFadden,44.95
+4,Cabala,Will Parfit,12.44
+5,Catre Culmile Succesului, Pavel Corut, 38.4
+6,Ingeri Rebeli, Pavel Corut, 78.2
+7,Mantuirea De Dupa Cumplita Ratacire, Pavel Corut, 70.2
+8,Secretele Varstelor De Aur, Pavel Corut, 99.92
+9,Dezvaluirile Unui Jurnalist, Anonim, 42.1
+10,Pe Aripile Vantului, Emilly Bronte, 28.4

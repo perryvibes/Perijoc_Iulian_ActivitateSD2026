@@ -33,9 +33,15 @@
     <ClCompile Include="seminar5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExercitiiListe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="carti.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

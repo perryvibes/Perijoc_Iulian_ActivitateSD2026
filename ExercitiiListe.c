@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNING
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,45 +35,46 @@ void afisareCarte(Carte c) {
 Carte initializareCarte(int _id, const char* _den, const char* _autor, float _pret) {
 	Carte c;
 	c.id = _id;
-	c.denumire = malloc(sizeof(char)*sizeof(_den)+1);
-	strncpy(c.denumire, _den, sizeof(char)*sizeof(_den)+1);
-	c.autor = malloc(sizeof(char)*sizeof(_autor)+1);
-	strncpy(c.autor, _autor, sizeof(char)*sizeof(_autor)+1);
+	c.denumire = malloc(sizeof(char) * sizeof(_den) + 1);
+	strcpy_s(c.denumire, sizeof(char) * sizeof(_den) + 1, _den);
+	c.autor = malloc(sizeof(char) * sizeof(_autor) + 1);
+	strcpy_s(c.autor, sizeof(char) * sizeof(_autor) + 1, _autor);
 	c.pret = _pret;
 	return c;
 }
 
 Carte citireCarteFisier(FILE* f) {
 	Carte c;
-	char buffer[100]; 
+	char buffer[100];
 	char delimitator[3] = ",\n";
-	fgets(buffer,100,f); 
+	fgets(buffer, 100, f);
 	char* token;
-	token = strtok(buffer,delimitator); // de verif flow lin 45-49 deeper
+	token = strtok(buffer, delimitator); // de verif flow lin 45-49 deeper
 	c.id = atoi(token);
-	token = strtok(NULL,delimitator);
-	c.denumire = malloc(sizeof(char)*strlen(token)+1);
-	strncpy(c.denumire, token, sizeof(char)*strlen(token)+1);
 	token = strtok(NULL, delimitator);
-	c.autor = malloc(sizeof(char)*strlen(token)+1);
-	strncpy(c.autor, token, sizeof(char)*strlen(token)+1);
-	token = strtok(NULL,delimitator);
+	c.denumire = malloc(sizeof(char) * strlen(token) + 1);
+	strcpy_s(c.denumire, sizeof(char) * strlen(token) + 1, token);
+	token = strtok(NULL, delimitator);
+	c.autor = malloc(sizeof(char) * strlen(token) + 1);
+	strcpy_s(c.autor, sizeof(char) * strlen(token) + 1, token);
+	token = strtok(NULL, delimitator);
 	c.pret = atof(token);
 	return c;
 }
 
-void adaugareCartiInListaSfarsit(ListaDubla* lista, Carte carte){
-		Nod* aux = (Nod*)malloc(sizeof(Nod));
-		aux->info = carte;
-		aux->next = NULL;
-		aux->prev = lista->tail;
-		if (lista->tail != NULL) {
-			lista->tail->next = aux;
-		} else {
-			lista->head = aux;
-		}
-		lista->tail = aux;
-		lista->nrNoduri++;
+void adaugareCartiInListaSfarsit(ListaDubla* lista, Carte carte) {
+	Nod* aux = (Nod*)malloc(sizeof(Nod));
+	aux->info = carte;
+	aux->next = NULL;
+	aux->prev = lista->tail;
+	if (lista->tail != NULL) {
+		lista->tail->next = aux;
+	}
+	else {
+		lista->head = aux;
+	}
+	lista->tail = aux;
+	lista->nrNoduri++;
 }
 
 void adaugareCartiInListaInceput(ListaDubla* lista, Carte carte) {
@@ -81,9 +82,10 @@ void adaugareCartiInListaInceput(ListaDubla* lista, Carte carte) {
 	nou->info = carte;
 	nou->prev = NULL;
 	nou->next = lista->head;
-	if(lista->head != NULL) {
+	if (lista->head != NULL) {
 		lista->head->prev = nou;
-	} else {
+	}
+	else {
 		lista->tail = nou;
 	}
 	lista->head = nou;
@@ -91,8 +93,8 @@ void adaugareCartiInListaInceput(ListaDubla* lista, Carte carte) {
 }
 
 void afisareListaCartiFirst(ListaDubla* lista) {
-	Nod* p =  lista->head;
-	while(p) {
+	Nod* p = lista->head;
+	while (p) {
 		afisareCarte(p->info);
 		p = p->next;
 	}
@@ -100,7 +102,7 @@ void afisareListaCartiFirst(ListaDubla* lista) {
 
 void afisareListaCartiEnd(ListaDubla* lista) {
 	Nod* p = lista->tail;
-	while(p) {
+	while (p) {
 		afisareCarte(p->info);
 		p = p->prev;
 	}
@@ -110,10 +112,12 @@ void dezalocare1(Carte x) {
 	printf("\nDEZALOCARE\n");
 	if (x.autor != NULL) {
 		free(x.autor);
-	} else if (x.denumire != NULL)
+	}
+	else if (x.denumire != NULL)
 	{
 		free(x.denumire);
-	} else {
+	}
+	else {
 		x.denumire = NULL;
 		x.autor = NULL;
 	}
@@ -129,14 +133,14 @@ int main() {
 
 	ListaDubla listaCarti;
 	FILE* f = fopen("carti.txt", "r");
-	while(!feof(f)) {
-		adaugareCartiInListaSfarsit(&listaCarti,citireCarteFisier(f));
+	while (!feof(f)) {
+		adaugareCartiInListaInceput(&listaCarti, citireCarteFisier(f));
 	}
 	afisareListaCartiFirst(&listaCarti);
 	// Carte c = citireCarteFisier(f);
 	// afisareCarte(c);
-	
+
 	fclose(f);
 
-    return 0;
+	return 0;
 }

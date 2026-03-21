@@ -135,31 +135,162 @@ HashTable citireMasiniDinFisier(const char* numeFisier, int dimensiune) {
 
 void afisareTabelaDeMasini(HashTable ht) {
 	//sunt afisate toate masinile cu evidentierea clusterelor realizate
+	for (int i = 0; i < ht.dim; i++) {
+		if (ht.tabela[i] != NULL) {
+			printf("\nMasinile de pe pozitia %d sunt:\n", i);
+			afisareListaMasini(ht.tabela[i]);
+		}
+		else {
+			printf("\nPe pozitia %d nu avem masini\n", i);
+		}
+	}
+}
+
+void dezalocareListaMasini(Nod** lista) {
+	Nod* p = *lista;
+	while (p) {
+		Nod* aux = p;
+		p = p->next;
+		if (aux->masina.numeSofer != NULL) {
+			free(aux->masina.numeSofer);
+		}
+		if (aux->masina.model != NULL) {
+			free(aux->masina.model);
+		}
+		free(aux);
+	}
+	*lista = NULL;
 }
 
 void dezalocareTabelaDeMasini(HashTable *ht) {
 	//sunt dezalocate toate masinile din tabela de dispersie
+	for (int i = 0; i < ht->dim; i++) {
+		if (ht->tabela[i] != NULL) {
+			dezalocareListaMasini(&(ht->tabela[i]));
+		}
+		else {
+			continue;
+		}
+	}
+	free(ht->tabela);
+	ht->tabela = NULL;
+	ht->dim = 0;
+}
+
+float calculeazaMedieLista(Nod* cap) {
+	float suma = 0;
+	int nrElemente = 0;
+	while (cap) {
+		suma += cap->masina.pret;
+		nrElemente++;
+		cap = cap->next;
+	}
+	return (nrElemente > 0 ? suma / nrElemente : 0);
 }
 
 float* calculeazaPreturiMediiPerClustere(HashTable ht, int* nrClustere) {
 	//calculeaza pretul mediu al masinilor din fiecare cluster.
 	//trebuie sa returnam un vector cu valorile medii per cluster.
 	//lungimea vectorului este data de numarul de clustere care contin masini
-	return NULL;
+	float* preturi = NULL;
+	*nrClustere = 0;
+	for (int i = 0; i < ht.dim;i++) {
+		if (ht.tabela[i] != NULL) {
+			(*nrClustere)++;
+		}
+	}
+	preturi = (float*)malloc(sizeof(float) * (*nrClustere));
+	int contor = 0;
+	for (int i = 0; i < ht.dim;i++) {
+		if (ht.tabela[i] != NULL) {
+			preturi[contor] = calculeazaMedieLista(ht.tabela[i]);
+			contor++;
+		}
+	}
+	return preturi;
 }
 
-Masina getMasinaDupaCheie(HashTable ht /*valoarea pentru masina cautata*/) {
+Masina getMasinaDinLista(Nod* cap, const char* nume) {
 	Masina m;
+	m.id = -1;
+
+	while (cap && strcmp(cap->masina.numeSofer, nume) != 0) {
+		cap = cap->next;
+	}
+	if (cap) {
+		m = cap->masina;
+		m.model = (char*)malloc(sizeof(char) * strlen(cap->masina.model) + 1);
+		strcpy_s(m.model, sizeof(char) * strlen(cap->masina.model)+1, cap->masina.model);
+		m.numeSofer = (char*)malloc(sizeof(char) * strlen(cap->masina.numeSofer) + 1);
+		strcpy_s(m.numeSofer, sizeof(char) * strlen(cap->masina.numeSofer)+1, cap->masina.numeSofer);
+	}
+	return m;
+}
+
+Masina getMasinaDupaNumeSofer(HashTable ht, const char* numeCautat) {
+	Masina m;
+	m.id = -1;
 	//cauta masina dupa valoarea atributului cheie folosit in calcularea hash-ului
-	//trebuie sa modificam numele functiei 
+	//trebuie sa modificam numele functiei
+	//for (int i = 0; i < ht.dim; i++) {
+	//	if (ht.tabela != NULL) {
+	//		Nod* p = ht.tabela;
+	//		while (p) {
+	//			if (!strcmp(p->masina.numeSofer, numeCautat)) {
+	//				m.id = p->masina.id;
+	//				m.numeSofer = malloc(sizeof(char) * strlen(numeCautat) + 1);
+	//				strcpy(m.numeSofer, p->masina.numeSofer);
+	//				m.model = malloc(sizeof(char) * strlen(p->masina.model) + 1);
+	//				strcpy(m.model, p->masina.model);
+	//				m.nrUsi = p->masina.nrUsi;
+	//				m.pret = p->masina.pret;
+	//				m.serie = p->masina.serie;
+	//			}
+	//		}
+	//	}
+	//}
+	int poz = calculeazaHash(numeCautat, ht.dim);
+	if (poz >= 0 && poz < ht.dim) {
+		return getMasinaDinLista(ht.tabela[poz], numeCautat);
+	}
 	return m;
 }
 
 int main() {
 
 	HashTable ht = citireMasiniDinFisier("masini2.txt", 7);
+	afisareTabelaDeMasini(ht);
+	
+	printf("\n==========================================================================\n");
+	
+	int nrClustere = 0;
+	float* preturi = calculeazaPreturiMediiPerClustere(ht, &nrClustere);
+
+	printf("Preturile medii per clustere sunt:\n");
+	for (int i = 0;i < nrClustere;i++) {
+		printf("%.2f  ", preturi[i]);
+	}
+	
+	printf("\n==========================================================================\n");
+
+	Masina masina = getMasinaDupaNumeSofer(ht, "Gheorghe Gigel");
+
+	if (masina.id != -1) {
+		afisareMasina(masina);
+		if (masina.numeSofer != NULL) {
+			free(masina.numeSofer);
+		}
+		if (masina.model != NULL) {
+			free(masina.model);
+		}
+	}
+	else {
+		printf("\nSoferul nu detine o masina!\n");
+	}
+
+	printf("\n==========================================================================\n");
 
 
-
+	dezalocareTabelaDeMasini(&ht);
 	return 0;
 }

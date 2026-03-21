@@ -7,4 +7,4 @@
 7,3,4000,Astra,Gheorghe Gigel,A
 8,6,12000,Mokka,Gheorghe Ion,U
 9,3,2700,Passat,Ionescu Marcel,I
-10,5,4000,Mokka,Vasilescu Gigel,B
+10,5,4000,Mokka,V Gigel,B

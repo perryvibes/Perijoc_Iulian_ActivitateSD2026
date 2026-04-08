@@ -121,29 +121,42 @@ float calculeazaPretMediu(Nod* lista) {
 	return sum/count;
 }
 
-void stergeMasiniDinSeria(Nod** lista, char serieCautata) {
-	//sterge toate masinile din lista care au seria primita ca parametru.
-	//tratati situatia ca masina se afla si pe prima pozitie, si pe ultima pozitie
-	if ((*lista) != NULL) {
-		Nod* p = (*lista);
-		while (p != NULL) {
-			if (p->masina.serie == serieCautata) {
-				Nod* sters = p;
-				p = p->next;
-				sters->masina.id = -1;
-				free(sters->masina.numeSofer);
-				sters->masina.numeSofer = NULL;
-				free(sters->masina.model);
-				sters->masina.model = NULL;
-				free(sters);
+void stergeMasiniDinSeria(Nod** cap, char serieCautata) {
+
+	// tratare situatie unde exista de la inceput seria cautata
+	while ((*cap) && (*cap)->masina.serie == serieCautata) {
+		Nod* p = (*cap);
+		(*cap) = p->next;
+		if (p->masina.numeSofer) {
+			free(p->masina.numeSofer);
+		}
+		if (p->masina.model) {
+			free(p->masina.model);
+		}
+		free(p);
+	}
+	if (!(*cap)) {
+		Nod* aux = (*cap);
+		while (aux) {
+			while (aux->next != NULL && aux->masina.serie == serieCautata) {
+				aux = aux->next;
 			}
-			p = p->next;
+			if (aux->next) {
+				Nod* temp = aux->next;
+				aux->next = temp->next;
+				if (temp->masina.numeSofer) {
+					free(temp->masina.numeSofer);
+				}
+				if (temp->masina.model) {
+					free(temp->masina.model);
+				}
+				free(temp);
+			}
+			else {
+				aux = NULL;
+			}
 		}
 	}
-	else {
-		printf("\nLista este goala\n");
-	}
-
 }
 
 float calculeazaPretulMasinilorUnuiSofer(Nod* lista, const char* numeSofer) {
@@ -163,10 +176,16 @@ float calculeazaPretulMasinilorUnuiSofer(Nod* lista, const char* numeSofer) {
 int main() {
 	Nod* lista = citireListaMasiniDinFisier("masini.txt");
 	afisareListaMasini(lista);
+	printf("=============================================");
+
 	float sum = calculeazaPretMediu(lista);
 	printf("\nPret Mediu: %.2f\n", sum);
 	float pretMasini = calculeazaPretulMasinilorUnuiSofer(lista, "Ionescu");
 	printf("\nPretul Masinilor: %.2f\n", pretMasini);
+
+	printf("=============================================");
+	stergeMasiniDinSeria(&lista, 'A');
+	afisareListaMasini(lista);
 
 	return 0;
 }

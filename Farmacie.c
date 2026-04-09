@@ -22,11 +22,13 @@ typedef struct ListaDubla ListaDubla;
 struct ListaDubla {
 	Nod* head;
 	Nod* tail;
+	int nrNoduri;
 };
 
 void initializareListaNull(ListaDubla* lista) {
 	lista->head = NULL;
 	lista->tail = NULL;
+	lista->nrNoduri = 0;
 }
 
 Farmacie initializareFarmacie(const char* _denumire, float _suprafata, unsigned char _nrAngajati, const char* _adresa) {
@@ -43,8 +45,9 @@ Farmacie initializareFarmacie(const char* _denumire, float _suprafata, unsigned 
 void afisareFarmacie(Farmacie info) {
 	printf("\nDenumire: %s", info.denumire);
 	printf("\nAdresa: %s", info.adresa);
-	printf("\nNumar angajati: %c", info.nrAngajati);
+	printf("\nNumar angajati: %d", info.nrAngajati);
 	printf("\nSuprafata: %.2f", info.suprafata);
+	printf("\n\n");
 }
 
 void afisareListaDubla(ListaDubla lista) {
@@ -72,6 +75,7 @@ void adaugaFarmacieInLista(ListaDubla* lista, Farmacie nouaFarmacie) {
 			lista->head = nou;
 		}
 		lista->tail = nou;
+		lista->nrNoduri++;
 }
 
 int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataCeruta) {
@@ -86,13 +90,97 @@ int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataC
 	return counter;
 }
 
+//void copiereFarmacii(ListaDubla lista, const char* lantComercial, Farmacie* vector) {
+//
+//	int nrFarmacii = 0;
+//	Nod* p = lista.head;
+//	while (p) {
+//		if (!strcmp(p->farmacie.denumire, lantComercial)) {
+//			nrFarmacii++;
+//		}
+//		p = p->next;
+//	}
+//	vector = (Farmacie*)malloc(sizeof(Farmacie) * nrFarmacii);
+//	for (int i = 0; i < nrFarmacii; i++) {
+//		p = lista.head;
+//		while (p) {
+//			if (!strcmp(p->farmacie.denumire, lantComercial)) {
+//				vector[i] = p->farmacie;
+//				vector[i].adresa = malloc(strlen(p->farmacie.adresa) + 1);
+//				strcpy(vector[i].adresa, p->farmacie.adresa);
+//				vector[i].denumire = malloc(strlen(p->farmacie.denumire) + 1);
+//				strcpy(vector[i].denumire, p->farmacie.denumire);
+//				i++;
+//			}
+//			p = p->next;
+//		}
+//	}
+//}
+
+void stergereFarmacie(ListaDubla* lista, unsigned char _angajati) {
+	if (lista->nrNoduri == 0) return;
+	Nod* p = lista->head;
+	while (p) {
+		if (p->farmacie.nrAngajati > _angajati) {
+			printf("\nTRUE");
+			if (p->prev == NULL) { // atunci e primul nod
+				lista->head = p->next;
+				p->next->prev = NULL;
+			}
+			else {
+				p->prev->next = p->next;
+			}
+			if (p->next == NULL) { // atunci e ultimul nod
+				lista->tail = p->prev;
+				p->prev->next = NULL;
+			}
+			else {
+				p->next->prev = p->prev;
+			}
+			if (p->farmacie.adresa != NULL) {
+				free(p->farmacie.adresa);
+			}
+			if (p->farmacie.denumire != NULL) {
+				free(p->farmacie.denumire);
+			}
+			free(p);
+			lista->nrNoduri--;
+			p=p->next;
+		}
+		p = p->next;
+	}
+	//// am ajuns pe nodul pe care vrem sa-l stergem...
+	//if (p->prev == NULL) { // atunci e primul nod
+	//	lista->head = p->next;
+	//	p->next->prev = NULL;
+	//}
+	//else {
+	//	p->prev->next = p->next;
+	//}
+	//if (p->next == NULL) { // atunci e ultimul nod
+	//	lista->tail = p->prev;
+	//	p->prev->next = NULL;
+	//}
+	//else {
+	//	p->next->prev = p->prev;
+	//}
+	//if (p->farmacie.adresa != NULL) {
+	//	free(p->farmacie.adresa);
+	//}
+	//if (p->farmacie.denumire != NULL) {
+	//	free(p->farmacie.denumire);
+	//}
+	//free(p);
+	//lista->nrNoduri--;
+}
+
 int main() {
 
 	// ex1
-	Farmacie f1 = initializareFarmacie("Farmacia Unirii",325,5,"Bulevardul Piata Unirii");
+	Farmacie f1 = initializareFarmacie("Farmacia Unirii",325,15,"Bulevardul Piata Unirii");
 	Farmacie f2 = initializareFarmacie("Farmacia Tei",35.7,5,"Bulevardul Timisoara");
-	Farmacie f3 = initializareFarmacie("Farmacia Dona",89.5,5,"Strada Margareta");
-	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,5,"Bulevardul Condei");
+	Farmacie f3 = initializareFarmacie("Farmacia Dona",89.5,4,"Strada Margareta");
+	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,20,"Bulevardul Condei");
 	Farmacie f5 = initializareFarmacie("Farmacia Hepytes",100.3,5,"Strada Iuliu Maniu");
 
 
@@ -107,8 +195,23 @@ int main() {
 
 	printf("\n================================================\n");
 
-	printf("Numar farmacii cu suprafete mai mici decat cea ceruta: %d", DeterminareNrFarmaciiCuOAnumitaSuprafata(lista, 65.1));
 	// ex2
+	printf("Numar farmacii cu suprafete mai mici decat cea ceruta: %d", DeterminareNrFarmaciiCuOAnumitaSuprafata(lista, 65.1));
+
+	printf("\n================================================\n");
+	// ex3
+
+	//Farmacie v;
+	//copiereFarmacii(lista, "Tei", &v);
+	//for (int i = 0; i < sizeof(v) / sizeof(v[0]); i++) {
+	//	afisareFarmacie(v[i]);
+	//}
+
+	printf("\n================================================\n");
+	// ex4
+	stergereFarmacie(&lista, 10);
+	afisareListaDubla(lista);
+
 
 	return 0;
 }

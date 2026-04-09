@@ -117,20 +117,19 @@ int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataC
 //	}
 //}
 
-void stergereFarmacie(ListaDubla* lista, unsigned char _angajati) {
-	if (lista->nrNoduri == 0) return;
+void stergereFarmacii(ListaDubla* lista, unsigned char _angajati) {
 	Nod* p = lista->head;
 	while (p) {
+		Nod* temp = p->next;
 		if (p->farmacie.nrAngajati > _angajati) {
-			printf("\nTRUE");
-			if (p->prev == NULL) { // atunci e primul nod
+			if (p->prev == NULL) {
 				lista->head = p->next;
 				p->next->prev = NULL;
 			}
 			else {
 				p->prev->next = p->next;
 			}
-			if (p->next == NULL) { // atunci e ultimul nod
+			if (p->next == NULL) {
 				lista->tail = p->prev;
 				p->prev->next = NULL;
 			}
@@ -144,34 +143,9 @@ void stergereFarmacie(ListaDubla* lista, unsigned char _angajati) {
 				free(p->farmacie.denumire);
 			}
 			free(p);
-			lista->nrNoduri--;
-			p=p->next;
 		}
-		p = p->next;
+		p = temp;
 	}
-	//// am ajuns pe nodul pe care vrem sa-l stergem...
-	//if (p->prev == NULL) { // atunci e primul nod
-	//	lista->head = p->next;
-	//	p->next->prev = NULL;
-	//}
-	//else {
-	//	p->prev->next = p->next;
-	//}
-	//if (p->next == NULL) { // atunci e ultimul nod
-	//	lista->tail = p->prev;
-	//	p->prev->next = NULL;
-	//}
-	//else {
-	//	p->next->prev = p->prev;
-	//}
-	//if (p->farmacie.adresa != NULL) {
-	//	free(p->farmacie.adresa);
-	//}
-	//if (p->farmacie.denumire != NULL) {
-	//	free(p->farmacie.denumire);
-	//}
-	//free(p);
-	//lista->nrNoduri--;
 }
 
 int main() {
@@ -180,8 +154,8 @@ int main() {
 	Farmacie f1 = initializareFarmacie("Farmacia Unirii",325,15,"Bulevardul Piata Unirii");
 	Farmacie f2 = initializareFarmacie("Farmacia Tei",35.7,5,"Bulevardul Timisoara");
 	Farmacie f3 = initializareFarmacie("Farmacia Dona",89.5,4,"Strada Margareta");
-	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,20,"Bulevardul Condei");
-	Farmacie f5 = initializareFarmacie("Farmacia Hepytes",100.3,5,"Strada Iuliu Maniu");
+	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,9,"Bulevardul Condei");
+	Farmacie f5 = initializareFarmacie("Farmacia Hepytes",100.3,30,"Strada Iuliu Maniu");
 
 
 	Farmacie v[5] = { f1,f2,f3,f4,f5 };
@@ -209,7 +183,7 @@ int main() {
 
 	printf("\n================================================\n");
 	// ex4
-	stergereFarmacie(&lista, 10);
+	stergereFarmacii(&lista, 10);
 	afisareListaDubla(lista);
 
 

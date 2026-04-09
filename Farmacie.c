@@ -117,7 +117,7 @@ int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataC
 //	}
 //}
 
-void stergereFarmacii(ListaDubla* lista, unsigned char _angajati) {
+void stergereFarmacii_First(ListaDubla* lista, unsigned char _angajati) {
 	Nod* p = lista->head;
 	while (p) {
 		Nod* temp = p->next;
@@ -146,6 +146,35 @@ void stergereFarmacii(ListaDubla* lista, unsigned char _angajati) {
 		}
 		p = temp;
 	}
+}
+
+void stergereFarmacii_Second(ListaDubla* lista, unsigned char _angajati) {
+	if (lista != NULL) return;
+	Nod** p = &(lista->head);
+	while ((*p) != NULL) {
+		Nod* temp = (*p);
+		if (temp->farmacie.nrAngajati > _angajati) {
+			(*p) = temp->next;
+			if (temp->prev == NULL) {
+				lista->head = temp->next;
+				temp->next->prev = NULL;
+			}
+			else {
+				temp->prev->next = temp->next;
+			}
+			if (temp->next == NULL) {
+				lista->tail = temp->prev;
+				temp->prev->next = NULL;
+			}
+			else {
+				temp->next->prev = temp->prev;
+			}
+		}
+		else {
+			p = &(temp->next);
+		}
+	}
+
 }
 
 int main() {
@@ -183,7 +212,7 @@ int main() {
 
 	printf("\n================================================\n");
 	// ex4
-	stergereFarmacii(&lista, 10);
+	stergereFarmacii_First(&lista, 10);
 	afisareListaDubla(lista);
 
 

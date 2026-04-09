@@ -74,13 +74,26 @@ void adaugaFarmacieInLista(ListaDubla* lista, Farmacie nouaFarmacie) {
 		lista->tail = nou;
 }
 
+int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataCeruta) {
+	int counter = 0;
+	Nod* p = lista.head;
+	while (p) {
+		if (p->farmacie.suprafata < _suprafataCeruta) {
+			counter++;
+		}
+		p = p->next;
+	}
+	return counter;
+}
+
 int main() {
 
-	Farmacie f1 = initializareFarmacie("Farmacia Unirii",89.5,5,"Bulevardul Piata Unirii");
-	Farmacie f2 = initializareFarmacie("Farmacia Unirii",89.5,5,"Bulevardul Piata Unirii");
-	Farmacie f3 = initializareFarmacie("Farmacia Unirii",89.5,5,"Bulevardul Piata Unirii");
-	Farmacie f4 = initializareFarmacie("Farmacia Unirii",89.5,5,"Bulevardul Piata Unirii");
-	Farmacie f5 = initializareFarmacie("Farmacia Unirii",89.5,5,"Bulevardul Piata Unirii");
+	// ex1
+	Farmacie f1 = initializareFarmacie("Farmacia Unirii",325,5,"Bulevardul Piata Unirii");
+	Farmacie f2 = initializareFarmacie("Farmacia Tei",35.7,5,"Bulevardul Timisoara");
+	Farmacie f3 = initializareFarmacie("Farmacia Dona",89.5,5,"Strada Margareta");
+	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,5,"Bulevardul Condei");
+	Farmacie f5 = initializareFarmacie("Farmacia Hepytes",100.3,5,"Strada Iuliu Maniu");
 
 
 	Farmacie v[5] = { f1,f2,f3,f4,f5 };
@@ -92,7 +105,10 @@ int main() {
 	afisareListaDubla(lista);
 	//afisareFarmacie(f1);
 
+	printf("\n================================================\n");
 
+	printf("Numar farmacii cu suprafete mai mici decat cea ceruta: %d", DeterminareNrFarmaciiCuOAnumitaSuprafata(lista, 65.1));
+	// ex2
 
 	return 0;
 }

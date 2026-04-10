@@ -19,10 +19,18 @@ struct Nod {
 };
 
 void afisareMagazin(Magazin* magazin) {
-	printf("Denumire: %s (id: %d)",magazin->denumire, magazin->id);
-	printf("Locatie: %s",magazin->locatie);
-	printf("Numar de angajati: %d",magazin->numar_angajati);
-	printf("Suprafata: %.2f",magazin->suprafata);
+	printf("\nDenumire: %s (id: %d)",magazin->denumire, magazin->id);
+	printf("\nLocatie: %s",magazin->locatie);
+	printf("\nNumar de angajati: %d",magazin->numar_angajati);
+	printf("\nSuprafata: %.2f",magazin->suprafata);
+}
+
+void afisareLista(Nod* lista) {
+	Nod* p = lista;
+	while (p) {
+		afisareMagazin(p->info);
+		p = p->next;
+	}
 }
 
 void inserareMagazinInLista(Nod** lista, Magazin* magazin) {
@@ -61,11 +69,31 @@ Magazin* citireMagazinFisier(const char* numeFisier) {
 	
 	fclose(fptr);
 	return magazin;
+}
 
+void dezalocareLista(Nod** lista) {
+	if ((*lista) == NULL) return;
+	Nod* p = (*lista);
+	while (p != NULL); {
+		Nod* aux = p;
+		p = p->next;
+		if (aux->info->denumire != NULL) {
+			free(aux->info->denumire);
+		}
+		if (aux->info->locatie != NULL) {
+			free(aux->info->locatie);
+		}
+		free(aux);
+	}
 }
 
 
 int main() {
+	
+	Magazin m1 = { 11,"La Nicusor", "Nehoiu", 33.89,2 };
+	Nod* lista = NULL;
+	inserareMagazinInLista(&lista, &m1);
+	afisareLista(lista);
 
 
 	return 0;

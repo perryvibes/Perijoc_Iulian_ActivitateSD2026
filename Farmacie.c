@@ -149,12 +149,12 @@ void stergereFarmacii_First(ListaDubla* lista, unsigned char _angajati) {
 }
 
 void stergereFarmacii_Second(ListaDubla* lista, unsigned char _angajati) {
-	if (lista != NULL) return;
-	Nod** p = &(lista->head);
-	while ((*p) != NULL) {
-		Nod* temp = (*p);
+	if (lista == NULL) return;
+	Nod** pp = &(lista->head);
+	while ((*pp) != NULL) {
+		Nod* temp = (*pp);
 		if (temp->farmacie.nrAngajati > _angajati) {
-			(*p) = temp->next;
+			(*pp) = temp->next;
 			if (temp->prev == NULL) {
 				lista->head = temp->next;
 				temp->next->prev = NULL;
@@ -169,12 +169,18 @@ void stergereFarmacii_Second(ListaDubla* lista, unsigned char _angajati) {
 			else {
 				temp->next->prev = temp->prev;
 			}
+			if (temp->farmacie.denumire != NULL) {
+				free(temp->farmacie.denumire);
+			}
+			if (temp->farmacie.adresa != NULL) {
+				free(temp->farmacie.adresa);
+			}
+			free(temp);
 		}
 		else {
-			p = &(temp->next);
+			pp = &(temp->next);
 		}
 	}
-
 }
 
 int main() {
@@ -212,7 +218,9 @@ int main() {
 
 	printf("\n================================================\n");
 	// ex4
-	stergereFarmacii_First(&lista, 10);
+	//stergereFarmacii_First(&lista, 10);
+	stergereFarmacii_Second(&lista, 10);
+
 	afisareListaDubla(lista);
 
 

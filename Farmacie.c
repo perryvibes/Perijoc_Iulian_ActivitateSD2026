@@ -220,6 +220,16 @@ int main() {
 	for (int i = 0; i < dimV; i++) {
 		afisareFarmacie(FarmaciiCopiate[i]);
 	}
+	//dezalocare vector
+	for (int i = 0; i < dimV; i++) {
+		if (FarmaciiCopiate[i].adresa != NULL) {
+			free(FarmaciiCopiate[i].adresa);
+		}
+		if (FarmaciiCopiate[i].denumire != NULL) {
+			free(FarmaciiCopiate[i].denumire);
+		}
+	}
+	free(FarmaciiCopiate);
 
 	printf("\n================================================\n");
 	// ex4

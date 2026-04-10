@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Farmacie.c" />
     <ClCompile Include="ListeSimple_recap.c" />
+    <ClCompile Include="Magazin.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="seminar1.c" />
     <ClCompile Include="seminar2.c" />

@@ -42,6 +42,9 @@
     <ClCompile Include="Farmacie.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Magazin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">

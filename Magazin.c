@@ -83,18 +83,61 @@ void dezalocareLista(Nod** lista) {
 		if (aux->info->locatie != NULL) {
 			free(aux->info->locatie);
 		}
+		if (aux->info != NULL) {
+			free(aux->info);
+		}
 		free(aux);
 	}
 }
 
+void modificareDenumireMagazin(Nod* lista, char* _denumire, char* _locatie, char* numeNou) {
+	Nod* p = lista;
+	while (p) {
+		if (strcmp(p->info->denumire, _denumire) == 0 && strcmp(p->info->locatie, _locatie) == 0) {
+			free(p->info->denumire);
+			p->info->denumire = malloc(strlen(numeNou) * sizeof(char) + 1);
+			strcpy(p->info->denumire, numeNou);
+		}
+		p = p->next;
+	}
+}
+
+int determinareNrMediuAngajatiLocalitate(Nod* lista, char* _locatie) {
+	Nod* p = lista;
+	int magazine = 0;
+	int angajati = 0;
+	while (p) {
+		if (strcmp(p->info->locatie, _locatie) == 0) {
+			angajati += p->info->numar_angajati;
+			magazine++;
+		}
+		p = p->next;
+	}
+	return angajati / magazine;
+}
 
 int main() {
 	
-	Magazin m1 = { 11,"La Nicusor", "Nehoiu", 33.89,2 };
+	Magazin* m1 = (Magazin*)malloc(sizeof(Magazin));
+	m1->id = 11;
+	m1->denumire = malloc(strlen("La Nicusor") * sizeof(char) + 1);
+	strcpy(m1->denumire, "La Nicusor");
+	m1->locatie = malloc(strlen("Nehoiu") * sizeof(char) + 1);
+	strcpy(m1->locatie, "Nehoiu");
+	m1->numar_angajati = 2;
+	m1->suprafata = 33.89;
+
+
 	Nod* lista = NULL;
-	inserareMagazinInLista(&lista, &m1);
+	inserareMagazinInLista(&lista, m1);
 	afisareLista(lista);
+	printf("\n===============================================\n");
+	modificareDenumireMagazin(lista, "La Nicusor", "Nehoiu", "La Micutzu");
+	afisareLista(lista);
+	printf("\n===============================================\n");
+	printf("Numar mediu angajati: %d", determinareNrMediuAngajatiLocalitate(lista, "Nehoiu"));
 
 
+	//dezalocareLista(&lista);
 	return 0;
 }

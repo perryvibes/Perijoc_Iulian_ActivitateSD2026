@@ -148,6 +148,7 @@ void stergereFarmacii_First(ListaDubla* lista, unsigned char _angajati) {
 				free(p->farmacie.denumire);
 			}
 			free(p);
+			lista->nrNoduri--;
 		}
 		p = temp;
 	}
@@ -181,11 +182,30 @@ void stergereFarmacii_Second(ListaDubla* lista, unsigned char _angajati) {
 				free(temp->farmacie.adresa);
 			}
 			free(temp);
+			lista->nrNoduri--;
 		}
 		else {
 			pp = &(temp->next);
 		}
 	}
+}
+
+void dezalocareLista(ListaDubla* lista) {
+	Nod* p = lista->head;
+	while (p) {
+		Nod* aux = p;
+		p = p->next;
+		if (aux->farmacie.adresa != NULL) {
+			free(aux->farmacie.adresa);
+		}
+		if (aux->farmacie.denumire != NULL) {
+			free(aux->farmacie.denumire);
+		}
+		free(aux);
+	}
+	lista->head = NULL;
+	lista->tail = NULL;
+	lista->nrNoduri = 0;
 }
 
 int main() {
@@ -238,6 +258,6 @@ int main() {
 
 	afisareListaDubla(lista);
 
-
+	// !!! Contine memory leaks!
 	return 0;
 }

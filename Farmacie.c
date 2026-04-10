@@ -90,32 +90,37 @@ int DeterminareNrFarmaciiCuOAnumitaSuprafata(ListaDubla lista, float _suprafataC
 	return counter;
 }
 
-//void copiereFarmacii(ListaDubla lista, const char* lantComercial, Farmacie* vector) {
-//
-//	int nrFarmacii = 0;
-//	Nod* p = lista.head;
-//	while (p) {
-//		if (!strcmp(p->farmacie.denumire, lantComercial)) {
-//			nrFarmacii++;
-//		}
-//		p = p->next;
-//	}
-//	vector = (Farmacie*)malloc(sizeof(Farmacie) * nrFarmacii);
-//	for (int i = 0; i < nrFarmacii; i++) {
-//		p = lista.head;
-//		while (p) {
-//			if (!strcmp(p->farmacie.denumire, lantComercial)) {
-//				vector[i] = p->farmacie;
-//				vector[i].adresa = malloc(strlen(p->farmacie.adresa) + 1);
-//				strcpy(vector[i].adresa, p->farmacie.adresa);
-//				vector[i].denumire = malloc(strlen(p->farmacie.denumire) + 1);
-//				strcpy(vector[i].denumire, p->farmacie.denumire);
-//				i++;
-//			}
-//			p = p->next;
-//		}
-//	}
-//}
+Farmacie* copiereFarmaciiInVector(ListaDubla* lista, const char* lantComercial, int* dimVector) {
+	*dimVector = 0;
+	int counter = 0;
+	Nod* p = lista->head;
+	while (p) {
+		if (strcmp(p->farmacie.denumire, lantComercial) == 0) {
+			counter++;
+		}
+		p = p->next;
+	}
+	
+	Farmacie* vectorFarmacii = NULL;
+	if (counter > 0) {
+		vectorFarmacii = (Farmacie*)malloc(sizeof(Farmacie) * counter);
+		*dimVector = counter;
+		p = lista->head;
+		int i = 0;
+		while (p) {
+			if (strcmp(p->farmacie.denumire, lantComercial) == 0) {
+				vectorFarmacii[i] = p->farmacie;
+				vectorFarmacii[i].denumire = malloc(sizeof(char) * strlen(p->farmacie.denumire) + 1);
+				strcpy(vectorFarmacii[i].denumire, p->farmacie.denumire);
+				vectorFarmacii[i].adresa = malloc(sizeof(char) * strlen(p->farmacie.adresa) + 1);
+				strcpy(vectorFarmacii[i].adresa, p->farmacie.adresa);
+				i++;
+			}
+			p = p->next;
+		}
+	}
+	return vectorFarmacii;
+}
 
 void stergereFarmacii_First(ListaDubla* lista, unsigned char _angajati) {
 	Nod* p = lista->head;
@@ -187,9 +192,9 @@ int main() {
 
 	// ex1
 	Farmacie f1 = initializareFarmacie("Farmacia Unirii",325,15,"Bulevardul Piata Unirii");
-	Farmacie f2 = initializareFarmacie("Farmacia Tei",35.7,5,"Bulevardul Timisoara");
+	Farmacie f2 = initializareFarmacie("TEI",35.7,5,"Bulevardul Timisoara");
 	Farmacie f3 = initializareFarmacie("Farmacia Dona",89.5,4,"Strada Margareta");
-	Farmacie f4 = initializareFarmacie("Farmacia Catena",29.8,9,"Bulevardul Condei");
+	Farmacie f4 = initializareFarmacie("TEI",29.8,9,"Bulevardul Condei");
 	Farmacie f5 = initializareFarmacie("Farmacia Hepytes",100.3,30,"Strada Iuliu Maniu");
 
 
@@ -210,11 +215,11 @@ int main() {
 	printf("\n================================================\n");
 	// ex3
 
-	//Farmacie v;
-	//copiereFarmacii(lista, "Tei", &v);
-	//for (int i = 0; i < sizeof(v) / sizeof(v[0]); i++) {
-	//	afisareFarmacie(v[i]);
-	//}
+	int dimV;
+	Farmacie* FarmaciiCopiate = copiereFarmaciiInVector(&lista, "TEI", &dimV);
+	for (int i = 0; i < dimV; i++) {
+		afisareFarmacie(FarmaciiCopiate[i]);
+	}
 
 	printf("\n================================================\n");
 	// ex4

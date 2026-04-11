@@ -33,6 +33,20 @@ void afisareLista(Nod* lista) {
 	}
 }
 
+Magazin* initializareMagazin(int _id, char* _den, char* _loc, float _sup, int _nrAngajati) {
+	Magazin* m = NULL;
+	if (_id > 0) {
+		m = (Magazin*)malloc(sizeof(Magazin));
+		m->id = _id;
+		m->denumire = malloc(strlen(_den) * sizeof(char) + 1);
+		strcpy(m->denumire, _den);
+		m->locatie = malloc(strlen(_loc) * sizeof(char) + 1);
+		strcpy(m->locatie, _loc);
+		m->numar_angajati = _nrAngajati;
+		m->suprafata = _sup;
+	}
+	return m;
+}
 void inserareMagazinInLista(Nod** lista, Magazin* magazin) {
 	Nod* nou = (Nod*)malloc(sizeof(Nod));
 	nou->info = magazin;
@@ -117,16 +131,8 @@ int determinareNrMediuAngajatiLocalitate(Nod* lista, char* _locatie) {
 }
 
 int main() {
-	
-	Magazin* m1 = (Magazin*)malloc(sizeof(Magazin));
-	m1->id = 11;
-	m1->denumire = malloc(strlen("La Nicusor") * sizeof(char) + 1);
-	strcpy(m1->denumire, "La Nicusor");
-	m1->locatie = malloc(strlen("Nehoiu") * sizeof(char) + 1);
-	strcpy(m1->locatie, "Nehoiu");
-	m1->numar_angajati = 2;
-	m1->suprafata = 33.89;
 
+	Magazin* m1 = initializareMagazin(11, "La Nicusor", "Nehoiu", 33.89, 2);
 
 	Nod* lista = NULL;
 	inserareMagazinInLista(&lista, m1);

@@ -45,6 +45,9 @@
     <ClCompile Include="Magazin.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Seminar7.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">

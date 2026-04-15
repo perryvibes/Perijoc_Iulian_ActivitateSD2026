@@ -252,9 +252,13 @@ void dezalocareCoadaDeMasini(Coada* lista) {
 
 
 //metode de procesare
-Masina getMasinaByID(/*stiva sau coada de masini*/int id);
+Masina getMasinaByIDCoada(Coada* lista, int _id) {
+	// to do next
+}
 
-float calculeazaPretTotal(/*stiva sau coada de masini*/);
+float calculeazaPretTotal(/*stiva sau coada de masini*/) {
+	// to do next;
+}
 
 int main() {
 	
@@ -301,7 +305,17 @@ int main() {
 	afisareCoada(lista);
 
 	printf("=======================================");
-	dezalocareCoadaDeMasini(&lista);
+	
+	Masina m3 = getMasinaByID(&lista, 6);
+	afisareMasina(m3);
+	if (m3.model != NULL) {
+		free(m3.model);
+	}
+	if (m3.numeSofer != NULL) {
+		free(m3.numeSofer);
+	}
 
+	printf("=======================================");
+	dezalocareCoadaDeMasini(&lista);
 	return 0;
 }

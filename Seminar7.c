@@ -240,8 +240,14 @@ void afisareCoada(Coada lista) {
 	}
 }
 
-void dezalocareCoadaDeMasini(/*coada*/) {
+void dezalocareCoadaDeMasini(Coada* lista) {
 	//sunt dezalocate toate masinile si coada de elemente
+	printf("\nDezalocare masini: \n");
+	while (lista->head) {
+		dequeue(lista);
+		printf("\nSucces!\n");
+	}
+	printf("\nDezalocare efectuata!\n");
 }
 
 
@@ -293,6 +299,9 @@ int main() {
 	Masina m2 = initializareMasina(14, 4, 29410, "M5", "Jhon", 'M');
 	enqueue(&lista, m2);
 	afisareCoada(lista);
+
+	printf("=======================================");
+	dezalocareCoadaDeMasini(&lista);
 
 	return 0;
 }

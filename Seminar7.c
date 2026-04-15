@@ -148,18 +148,82 @@ int size(NodStack* stack) {
 //QUEUE
 //Alegeti prin ce veti reprezenta coada si creati structura necesara acestei cozi
 //putem reprezenta o coada prin LSI, LDI sau vector
-void enqueue(/*coada*/ Masina masina) {
+
+typedef struct {
+	Masina masina;
+	struct NodCoada* next;
+	struct NodCoada* prev;
+} NodCoada;
+
+typedef struct {
+	NodCoada* head;
+	NodCoada* tail;
+} Coada;
+
+
+void enqueue(Coada* queue, Masina masinaNoua) {
 	//adauga o masina in coada
+	
+	NodCoada* nou = (NodCoada*)malloc(sizeof(NodCoada));
+	nou->masina = masinaNoua;
+	nou->prev = NULL;
+	nou->next = NULL;
+
+	if (queue != NULL) {
+		if (queue->head == NULL) {
+			queue->head = nou;
+			queue->tail = nou;
+		}
+		else {
+			// inserare la inceput de coada
+			queue->head->prev = nou;
+			nou->next = queue->head;
+			queue->head = nou;
+		}
+	}
+	else {
+		printf("\nNu exista o lista de tip coada!\n");
+		return;
+	}
+	
 }
 
-Masina dequeue(/*coada*/) {
+Masina dequeue(Coada* queue) {
 	//extrage o masina din coada
+	if (queue == NULL) { printf("\nNu exista o lista de tip coada!\n"); return; }
+	else {
+		if (queue->tail == NULL) {
+			printf("\nNu exista nod pe care sa-l stergem\n");
+		}
+		else {
+			NodCoada* temp = (NodCoada*)malloc(sizeof(NodCoada));
+			temp = queue->tail;
+			queue->tail = queue->tail->prev;
+			queue->tail->next = NULL;
+			if (temp->masina.model != NULL) {
+				free(temp->masina.model);
+			}
+			if (temp->masina.numeSofer != NULL) {
+				free(temp->masina.numeSofer);
+			}
+			free(temp);
+		}
+	}
 }
 
-void* citireCoadaDeMasiniDinFisier(const char* numeFisier) {
+Coada* citireCoadaDeMasiniDinFisier(const char* numeFisier) {
 	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
 	//prin apelul repetat al functiei citireMasinaDinFisier()
 	//ATENTIE - la final inchidem fisierul/stream-ul
+	Coada* lista = (Coada*)malloc(sizeof(Coada));
+	lista->head = NULL;
+	lista->tail = NULL;
+	FILE* fptr = fopen(numeFisier, "r");
+	while (!feof(fptr)) {
+		enqueue(lista, citireMasinaDinFisier(fptr));
+	}
+	fclose(fptr);
+	return lista;
 }
 
 void dezalocareCoadaDeMasini(/*coada*/) {
@@ -200,6 +264,10 @@ int main() {
 
 	printf("\nDezalocare: ...");
 	dezalocareStivaDeMasini(&stiva);
+
+	// Coada
+
+
 
 	return 0;
 }

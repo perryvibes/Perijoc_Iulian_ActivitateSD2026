@@ -145,6 +145,37 @@ int size(NodStack* stack) {
 	return count;
 }
 
+Masina getMasinaByIDStiva(NodStack** stack, int _id) {
+	NodStack* temp = NULL;
+	Masina rezultat;
+	rezultat.id = -1;
+	while (!emptyStack(*stack)) {
+		Masina m = popStack(stack);
+		if (m.id == _id) {
+			rezultat = m;
+		}
+		pushStack(&temp, m);
+	}
+	while (!emptyStack(temp)) {
+		pushStack(stack, popStack(&temp));
+	}
+	return rezultat;
+}
+
+float calculeazaPretTotalStiva(NodStack** stack) {
+	NodStack* temp = NULL;
+	float sum = 0;
+	while (!emptyStack(*stack)) {
+		Masina m = popStack(stack);
+		sum += m.pret;
+		pushStack(&temp, m);
+	}
+	while (!emptyStack(temp)) {
+		pushStack(stack, popStack(&temp));
+	}
+	return sum;
+}
+
 //QUEUE
 //Alegeti prin ce veti reprezenta coada si creati structura necesara acestei cozi
 //putem reprezenta o coada prin LSI, LDI sau vector
@@ -188,14 +219,19 @@ void enqueue(Coada* queue, Masina masinaNoua) {
 	
 }
 
-void dequeue(Coada* queue) {
+Masina dequeue(Coada* queue) {
 	//extrage o masina din coada
+	Masina m;
+	m.id = -1;
+
 	if (queue == NULL) { printf("\nNu exista o lista de tip coada!\n"); return; }
 	else {
 		if (queue->tail == NULL) {
+			queue->head = NULL;
 			printf("\nNu exista nod pe care sa-l stergem\n");
 		}
 		else {
+			m = queue->tail->masina;
 			NodCoada* temp = (NodCoada*)malloc(sizeof(NodCoada));
 			temp = queue->tail;
 			if (queue->tail->prev == NULL) {
@@ -206,15 +242,10 @@ void dequeue(Coada* queue) {
 				queue->tail = queue->tail->prev;
 				queue->tail->next = NULL;
 			}
-			if (temp->masina.model != NULL) {
-				free(temp->masina.model);
-			}
-			if (temp->masina.numeSofer != NULL) {
-				free(temp->masina.numeSofer);
-			}
 			free(temp);
 		}
 	}
+	return m;
 }
 
 Coada citireCoadaDeMasiniDinFisier(const char* numeFisier) {
@@ -253,46 +284,85 @@ void dezalocareCoadaDeMasini(Coada* lista) {
 
 //metode de procesare
 Masina getMasinaByIDCoada(Coada* lista, int _id) {
-	// to do next
+	Coada temp;
+	temp.head = NULL;
+	temp.tail = NULL;
+
+	Masina rezultat;
+	rezultat.id = -1;
+
+	while (lista->head) {
+		Masina m = dequeue(lista);
+		if (m.id == _id) {
+			rezultat = m;
+		}
+		enqueue(&temp, m);
+	}
+	while (temp.head) {
+		enqueue(lista, dequeue(&temp));
+	}
+	return rezultat;
 }
 
-float calculeazaPretTotal(/*stiva sau coada de masini*/) {
-	// to do next;
+
+float calculeazaPretTotalCoada(Coada* lista) {
+	Coada temp;
+	temp.head = NULL;
+	temp.tail = NULL;
+	float sum = 0;
+	while (lista->head) {
+		Masina m = dequeue(lista);
+		sum += m.pret;
+		enqueue(&temp, m);
+	}
+	while (temp.head) {
+		enqueue(lista, dequeue(&temp));
+	}
+	return sum;
 }
 
 int main() {
 	
-	//NodStack* stiva = citireStackMasiniDinFisier("masini.txt");
-	//afisareStiva(stiva);
-	//printf("=======================================");
-	//
-	//Masina m1 = popStack(&stiva);
-	//afisareMasina(m1);
+	NodStack* stiva = citireStackMasiniDinFisier("masini.txt");
+	afisareStiva(stiva);
+	printf("=======================================");
+	
+	Masina m1 = popStack(&stiva);
+	afisareMasina(m1);
 
-	//printf("=======================================");
-	//
-	//Masina m2 = initializareMasina(4,4,29410,"M5","Jhon",'M');
-	//pushStack(&stiva, m2);
-	//afisareStiva(stiva);
+	printf("=======================================");
+	
+	Masina m2 = initializareMasina(4,4,29410,"M5","Jhon",'M');
+	pushStack(&stiva, m2);
+	afisareStiva(stiva);
 
-	//printf("=======================================");
-	//
-	//printf("\nDimensiunea Stivei: %d\n", size(stiva));
-	//	
-	//printf("=======================================");
-	//
-	//NodStack* stivaGoala = NULL;
-	//printf("\nStiva este goala? %d\n", emptyStack(stivaGoala));
-	//	
-	//printf("=======================================");
+	printf("=======================================");
+	
+	printf("\nDimensiunea Stivei: %d\n", size(stiva));
+		
+	printf("=======================================");
+	
+	NodStack* stivaGoala = NULL;
+	printf("\nStiva este goala? %d\n", emptyStack(stivaGoala));
+		
+	printf("=======================================");
 
-	//printf("\nDezalocare: ...");
-	//dezalocareStivaDeMasini(&stiva);
+	afisareMasina(getMasinaByIDStiva(&stiva, 6));
+
+	printf("=======================================");
+
+	printf("\nSuma totala pe STIVA este de %.2f\n", calculeazaPretTotalStiva(&stiva));
+
+	printf("=======================================");
+
+	printf("\nDezalocare: ...");
+	dezalocareStivaDeMasini(&stiva);
 
 	// Coada
 
 	Coada lista = citireCoadaDeMasiniDinFisier("masini.txt");
 	afisareCoada(lista);
+
 	printf("\n=======================================\n");
 	
 	dequeue(&lista);
@@ -306,16 +376,18 @@ int main() {
 
 	printf("=======================================");
 	
-	Masina m3 = getMasinaByID(&lista, 6);
+	Masina m3 = getMasinaByIDCoada(&lista, 6);
 	afisareMasina(m3);
-	if (m3.model != NULL) {
-		free(m3.model);
-	}
-	if (m3.numeSofer != NULL) {
-		free(m3.numeSofer);
-	}
 
 	printf("=======================================");
+
+	printf("\nSuma totala COADA este de %.2f\n", calculeazaPretTotalCoada(&lista));
+	
+	printf("=======================================");
+
 	dezalocareCoadaDeMasini(&lista);
+	
+	printf("=======================================");
+
 	return 0;
 }

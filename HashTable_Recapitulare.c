@@ -90,13 +90,22 @@ void adaugaMasinaInLista(Nod** lista, Masina masinaNoua) {
 
 
 HashTable initializareHashTable(int dimensiune) {
-	HashTable ht;
 	//initializeaza vectorul de liste si seteaza fiecare lista ca fiind NULL;
+	HashTable ht;
+	for (int i = 0; i < dimensiune; i++) {
+		ht.vector[i] = NULL;
+	}
 	return ht;
 }
 
-int calculeazaHash(/*atribut al masini pentru clusterizare*/ int dimensiune) {
+int calculeazaHash(const char* nume, int dimensiune) {
 	// este calculat hash-ul in functie de dimensiunea tabelei si un atribut al masinii
+	int hash;
+	if (dimensiune == 0) { hash = 0; }
+	else {
+		hash = (nume[0] + nume[strlen(nume)]) % dimensiune;
+	}
+	return hash;
 }
 
 void inserareMasinaInTabela(HashTable hash, Masina galerie) {

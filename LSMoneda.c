@@ -12,7 +12,7 @@ typedef struct {
 
 typedef struct Nod {
 	Moneda info;
-	Nod* next;
+	struct Nod* next;
 } Nod;
 
 void adaugareMonedaInLista(Nod** lista, Moneda _moneda) {
@@ -61,14 +61,38 @@ Moneda greutateMaxima(Nod* lista) {
 	}
 	if (nodMax != NULL) {
 		m = nodMax->info;
-		m.tara = malloc(sizeof(char) * (strlen(p->info.tara) + 1));
+		m.tara = malloc(sizeof(char) * (strlen(nodMax->info.tara) + 1));
 		strcpy(m.tara, nodMax->info.tara);
 	}
 	return m;
 }
 
 void stergereMoneda(Nod** lista, float _greutate) {
-	// TO DO!!	
+	// TO DO!!
+	if ((*lista)->info.greutate == _greutate) {
+		Nod* temp = (*lista);
+		(*lista) = (*lista)->next;
+		free(temp);
+	}
+	Nod* p = *lista;
+	while (p->next != NULL && p->next->info.greutate != _greutate) {
+		p = p->next;
+	}
+	if (p->next != NULL) {
+		Nod* temp = p->next;
+		p->next = temp->next;
+		free(temp);
+	}
+}
+
+void dezalocareHeap(Nod** lista) {
+	Nod* p = *lista;
+	while (p) {
+		Nod* temp = p;
+		p = p->next;
+		free(temp);
+	}
+	*lista = NULL;
 }
 
 int main() {
@@ -97,5 +121,6 @@ int main() {
 	afisareMoneda(max);
 	free(max.tara);
 
+	dezalocareHeap(&lista);
 	return 0;
 }

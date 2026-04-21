@@ -189,7 +189,7 @@
 //		lista = lista->next;
 //	}
 //	if (pretulMaxim > 0) {
-//		char* nou = malloc(strlen(modelScump));
+//		char* nou = malloc(strlen(modelScump)+1);
 //		strcpy_s(nou, strlen(modelScump) + 1, modelScump);
 //		return nou;
 //	}

@@ -193,6 +193,9 @@
 //	// tratam cazul pentru ultimul nod din lista
 //	if (p->next == NULL) {
 //		lista->last = p->prev;
+//		if (lista->last) {
+//			lista->last->next = NULL;
+//		}
 //	}
 //	else {
 //		p->next->prev = p->prev;

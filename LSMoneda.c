@@ -1,0 +1,104 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+	char* tara;
+	int val_nominala;
+	float greutate;
+	int anEmitere;
+} Moneda;
+
+typedef struct {
+	Moneda info;
+	struct Nod* next;
+} Nod;
+
+void adaugareMonedaInLista(Nod** lista, Moneda _moneda) {
+	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	nou->info = _moneda;
+	nou->next = NULL;
+	if (*lista == NULL) {
+		*lista = nou;
+	}
+	else {
+		Nod* p = *lista;
+		while (p->next != NULL) {
+			p = p->next;
+		}
+		p->next = nou;
+	}
+}
+
+void afisareMoneda(Moneda _m) {
+	printf("\nTara: %s\n", _m.tara);
+	printf("Valoare nominala: %d\n", _m.val_nominala);
+	printf("Greutate: %.2f\n", _m.greutate);
+	printf("An Emitere: %d\n", _m.anEmitere);
+}
+
+void afisareLista(Nod* lista) {
+	Nod* p = lista;
+	while (p) {
+		afisareMoneda(p->info);
+		printf("=======================\n");
+		p = p->next;
+	}
+}
+
+Moneda greutateMaxima(Nod* lista) {
+	float max = 0;
+	Moneda m;
+	m.greutate = -1;
+	Nod* p = lista;
+	while (p) {
+		if (p->info.greutate > max) {
+			max = p->info.greutate;
+		}
+		p = p->next;
+	}
+	p = lista;
+	while (p) {
+		if (max == p->info.greutate) {
+			m = p->info;
+			m.tara = malloc(sizeof(char) * strlen(p->info.tara) + 1);
+			strcpy(m.tara, p->info.tara);
+		}
+		p = p->next;
+	}
+	return m;
+}
+
+void stergereMoneda(Nod** lista, float _greutate) {
+	// TO DO!!	
+}
+
+int main() {
+
+	Moneda dolar = { "america",1,25,1978 };
+	Moneda ron = { "romania",1,50,1977 };
+	Moneda chf = { "elvetia",2,20,1924 };
+	Moneda eur = { "spania",1,30,1900 };
+	Moneda lira = { "marea britanie",4,45,1999 };
+	
+	Nod* lista = NULL;
+	adaugareMonedaInLista(&lista, dolar);
+	adaugareMonedaInLista(&lista, ron);
+	adaugareMonedaInLista(&lista, chf);
+	adaugareMonedaInLista(&lista, eur);
+	adaugareMonedaInLista(&lista, lira);
+	afisareLista(lista);
+
+	printf("\n=================\n");
+	stergereMoneda(&lista, 30);
+	afisareLista(lista);
+	
+	
+	printf("\n=================\n");
+	Moneda max = greutateMaxima(lista);
+	afisareMoneda(max);
+	free(max.tara);
+
+	return 0;
+}

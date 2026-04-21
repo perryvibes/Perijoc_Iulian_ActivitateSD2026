@@ -130,6 +130,7 @@
     <ClCompile Include="Farmacie.c" />
     <ClCompile Include="HashTable_Recapitulare.c" />
     <ClCompile Include="ListeSimple_recap.c" />
+    <ClCompile Include="LSMoneda.c" />
     <ClCompile Include="Magazin.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="seminar1.c" />

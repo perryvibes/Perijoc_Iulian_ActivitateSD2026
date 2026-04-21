@@ -10,9 +10,9 @@ typedef struct {
 	int anEmitere;
 } Moneda;
 
-typedef struct {
+typedef struct Nod {
 	Moneda info;
-	struct Nod* next;
+	Nod* next;
 } Nod;
 
 void adaugareMonedaInLista(Nod** lista, Moneda _moneda) {
@@ -49,23 +49,20 @@ void afisareLista(Nod* lista) {
 
 Moneda greutateMaxima(Nod* lista) {
 	float max = 0;
-	Moneda m;
-	m.greutate = -1;
+	Moneda m = { NULL,0,0.0,0 };
 	Nod* p = lista;
+	Nod* nodMax = NULL;
 	while (p) {
 		if (p->info.greutate > max) {
 			max = p->info.greutate;
+			nodMax = p;
 		}
 		p = p->next;
 	}
-	p = lista;
-	while (p) {
-		if (max == p->info.greutate) {
-			m = p->info;
-			m.tara = malloc(sizeof(char) * strlen(p->info.tara) + 1);
-			strcpy(m.tara, p->info.tara);
-		}
-		p = p->next;
+	if (nodMax != NULL) {
+		m = nodMax->info;
+		m.tara = malloc(sizeof(char) * (strlen(p->info.tara) + 1));
+		strcpy(m.tara, nodMax->info.tara);
 	}
 	return m;
 }

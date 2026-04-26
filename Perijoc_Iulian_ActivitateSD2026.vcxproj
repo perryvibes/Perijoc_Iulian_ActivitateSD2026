@@ -140,6 +140,7 @@
     <ClCompile Include="seminar5.c" />
     <ClCompile Include="seminar6.c" />
     <ClCompile Include="Seminar7.c" />
+    <ClCompile Include="Seminar8.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="carti.txt" />

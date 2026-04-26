@@ -20,7 +20,7 @@ typedef struct StructuraMasina Masina;
 //un vector de elemente, lungimea vectorului si numarul de elemente din vector
 struct Heap {
 	int lungime;
-	Masina* masini;
+	Masina* vector;
 	int nrMasini;
 };
 typedef struct Heap Heap;
@@ -62,13 +62,30 @@ Heap initializareHeap(int lungime) {
 	Heap heap;
 	heap.lungime = lungime;
 	heap.nrMasini = 0;
-	heap.masini = (Masina*)malloc(sizeof(Masina) * lungime);
+	heap.vector = (Masina*)malloc(sizeof(Masina) * lungime);
 	return heap;
 }
 
-void filtreazaHeap(Heap heap, int pozitieNod) {
+void filtreazaHeap(Heap heap, int pozitieNod) { //functionalitatea heap-ului
 	//filtreaza heap-ul pentru nodul a carei pozitie o primeste ca parametru
+	int pozNodSt = 2 * pozitieNod + 1;
+	int pozNodDr = 2 * pozitieNod + 2;
+	int pozMax = pozitieNod;
+	if (pozNodSt < heap.nrMasini && heap.vector[pozNodSt].pret > heap.vector[pozMax].pret) {
+		pozMax = pozNodSt;
+	}
+	if (pozNodDr < heap.nrMasini && heap.vector[pozNodDr].pret > heap.vector[pozMax].pret) {
+		pozMax = pozNodDr;
+	}
+	if (pozMax != pozitieNod) {
+		Masina aux = heap.vector[pozMax];
+		heap.vector[pozMax] = heap.vector[pozitieNod];
+		heap.vector[pozitieNod] = aux;
+		if (pozMax < (heap.nrMasini - 2) / 2) {  //???
+			filtreazaHeap(heap, pozMax);
+		}
 
+	}
 }
 
 Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
@@ -97,6 +114,8 @@ void dezalocareHeap(Heap* heap) {
 }
 
 int main() {
+
+	Heap heap = initializareHeap(10);
 
 
 	return 0;

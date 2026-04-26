@@ -81,7 +81,7 @@ void filtreazaHeap(Heap heap, int pozitieNod) { //functionalitatea heap-ului
 		Masina aux = heap.vector[pozMax];
 		heap.vector[pozMax] = heap.vector[pozitieNod];
 		heap.vector[pozitieNod] = aux;
-		if (pozMax < (heap.nrMasini - 2) / 2) {  //??? De studiat
+		if (pozMax <= (heap.nrMasini - 2) / 2) {  //??? De studiat
 			filtreazaHeap(heap, pozMax);
 		}
 
@@ -99,7 +99,7 @@ Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
 		heap.vector[heap.nrMasini++] = citireMasinaDinFisier(fptr);
 	}
 	fclose(fptr);
-	for (int i = (heap.nrMasini - 2) / 2; i >= 0; i++) {
+	for (int i = (heap.nrMasini - 2) / 2; i >= 0; i--) {
 		filtreazaHeap(heap, i);
 	}
 	return heap;
@@ -127,10 +127,10 @@ Masina extrageMasina(Heap* heap) {
 		aux = heap->vector[0];
 		heap->vector[0] = heap->vector[heap->nrMasini - 1];
 		heap->vector[heap->nrMasini - 1] = aux;
-	}
-	heap->nrMasini--;
-	for (int i = (heap->nrMasini - 2) / 2; i >= 0; i--) {
-		filtreazaHeap(*heap, i);
+		heap->nrMasini--;
+		for (int i = (heap->nrMasini - 2) / 2; i >= 0; i--) {
+			filtreazaHeap(*heap, i);
+		}
 	}
 	return aux; // shallow copy
 }
@@ -138,12 +138,36 @@ Masina extrageMasina(Heap* heap) {
 
 void dezalocareHeap(Heap* heap) {
 	//sterge toate elementele din Heap
+	if (heap->lungime > 0) {
+		for (int i = 0; i < heap->lungime; i++) {
+			if (heap->vector[i].model != NULL) {
+				free(heap->vector[i].model);
+			}
+			if (heap->vector[i].numeSofer != NULL) {
+				free(heap->vector[i].numeSofer);
+			}
+		}
+		free(heap->vector);
+		heap->lungime = 0;
+		heap->nrMasini = 0;
+		heap->vector = NULL;
+	}
 }
 
 int main() {
 
-	Heap heap = initializareHeap(10);
+	Heap heap = citireHeapDeMasiniDinFisier("masini.txt");
+	afisareHeap(heap);
+	printf("\n========================================\n");
+	Masina m = extrageMasina(&heap);
+	afisareMasina(m);
+	printf("\n========================================\n");
+	extrageMasina(&heap);
+	extrageMasina(&heap);
+	afiseazaHeapAscuns(heap);
+	printf("\n========================================\n");
 
+	dezalocareHeap(&heap);
 
 	return 0;
 }

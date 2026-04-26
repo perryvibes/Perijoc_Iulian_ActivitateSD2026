@@ -81,7 +81,7 @@ void filtreazaHeap(Heap heap, int pozitieNod) { //functionalitatea heap-ului
 		Masina aux = heap.vector[pozMax];
 		heap.vector[pozMax] = heap.vector[pozitieNod];
 		heap.vector[pozitieNod] = aux;
-		if (pozMax < (heap.nrMasini - 2) / 2) {  //???
+		if (pozMax < (heap.nrMasini - 2) / 2) {  //??? De studiat
 			filtreazaHeap(heap, pozMax);
 		}
 
@@ -93,6 +93,16 @@ Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
 	// pe care trebuie sa il filtram astfel incat sa respecte 
 	// principiul de MAX-HEAP sau MIN-HEAP dupa un anumit criteriu
 	// sunt citite toate elementele si abia apoi este filtrat vectorul
+	Heap heap = initializareHeap(10);
+	FILE* fptr = fopen(numeFisier, "r");
+	while (!feof(fptr)) {
+		heap.vector[heap.nrMasini++] = citireMasinaDinFisier(fptr);
+	}
+	fclose(fptr);
+	for (int i = (heap.nrMasini - 2) / 2; i >= 0; i++) {
+		filtreazaHeap(heap, i);
+	}
+	return heap;
 }
 
 void afisareHeap(Heap heap) {

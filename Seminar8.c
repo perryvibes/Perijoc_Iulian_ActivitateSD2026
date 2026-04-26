@@ -20,6 +20,8 @@ typedef struct StructuraMasina Masina;
 //un vector de elemente, lungimea vectorului si numarul de elemente din vector
 struct Heap {
 	int lungime;
+	Masina* masini;
+	int nrMasini;
 };
 typedef struct Heap Heap;
 
@@ -57,10 +59,16 @@ void afisareMasina(Masina masina) {
 Heap initializareHeap(int lungime) {
 	//initializeaza heap-ul cu 0 elemente 
 	//dar cu o lungime primita ca parametru
+	Heap heap;
+	heap.lungime = lungime;
+	heap.nrMasini = 0;
+	heap.masini = (Masina*)malloc(sizeof(Masina) * lungime);
+	return heap;
 }
 
 void filtreazaHeap(Heap heap, int pozitieNod) {
 	//filtreaza heap-ul pentru nodul a carei pozitie o primeste ca parametru
+
 }
 
 Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {

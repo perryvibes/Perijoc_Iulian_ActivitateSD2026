@@ -107,15 +107,32 @@ Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
 
 void afisareHeap(Heap heap) {
 	//afiseaza elementele vizibile din heap
+	for (int i = 0; i < heap.nrMasini; i++) {
+		afisareMasina(heap.vector[i]);
+	}
 }
 
 void afiseazaHeapAscuns(Heap heap) {
 	//afiseaza elementele ascunse din heap
+	for (int i = heap.nrMasini; i < heap.lungime; i++) {
+		afisareMasina(heap.vector[i]);
+	}
 }
 
-Masina extrageMasina(void* heap) {
+Masina extrageMasina(Heap* heap) {
 	//extrage si returneaza masina de pe prima pozitie
 	//elementul extras nu il stergem...doar il ascundem
+	Masina aux = {0,0,0,NULL,NULL,0};
+	if (heap->nrMasini > 0) {
+		aux = heap->vector[0];
+		heap->vector[0] = heap->vector[heap->nrMasini - 1];
+		heap->vector[heap->nrMasini - 1] = aux;
+	}
+	heap->nrMasini--;
+	for (int i = (heap->nrMasini - 2) / 2; i >= 0; i--) {
+		filtreazaHeap(*heap, i);
+	}
+	return aux; // shallow copy
 }
 
 

@@ -99,6 +99,35 @@ void afisareMasiniDinArbore(Nod* arbore) {
 
 }
 
+/*
+	Modurile de parcurgere sunt:
+	RSD - radacina, nod stanga, nod dreapta
+	SRD - nod stanga, radacina, nod dreapta
+	SDR - nod stanga, nod dreapta, radacina
+*/
+
+void afisareOrdineRSD(Nod* arbore) {
+	if (arbore) {
+		afisareMasina(arbore->masina);
+		afisareOrdineRSD(arbore->nodSt);
+		afisareOrdineRSD(arbore->nodDr);
+	}
+}
+void afisareOrdineSRD(Nod* arbore) {
+	if (arbore) {
+		afisareOrdineSRD(arbore->nodSt);
+		afisareMasina(arbore->masina);
+		afisareOrdineSRD(arbore->nodDr);
+	}
+}
+void afisareOrdineSDR(Nod* arbore) {
+	if (arbore) {
+		afisareOrdineSDR(arbore->nodSt);
+		afisareOrdineSDR(arbore->nodDr);
+		afisareMasina(arbore->masina);
+	}
+}
+
 void dezalocareArboreDeMasini(/*arbore de masini*/) {
 	//sunt dezalocate toate masinile si arborele de elemente
 }

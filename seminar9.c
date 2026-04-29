@@ -148,7 +148,7 @@ Masina getMasinaByID(Nod* arbore, int id) {
 		if (arbore->masina.id > id) {
 			getMasinaByID(arbore->nodSt, id);
 		}
-		else if (arbore->masina.id < id) {
+		else if (arbore->masina.id <= id) { // vom alege daca e egal cu id-ul sa-l puna pe dreapta
 			getMasinaByID(arbore->nodDr, id);
 		}
 		else {
@@ -165,16 +165,16 @@ int determinaNumarNoduri(Nod* arbore) {
 		int noduriDr = determinaNumarNoduri(arbore->nodDr);
 		return 1 + noduriSt + noduriDr;
 	}
-	return 0;
+	else {
+		return 0;
+	}
 }
 
 int calculeazaInaltimeArbore(Nod* arbore) {
 	//calculeaza inaltimea arborelui care este data de 
 	//lungimea maxima de la radacina pana la cel mai indepartat nod frunza
 	if (arbore) {
-		int noduriSt = 1 + calculeazaInaltimeArbore(arbore->nodSt);
-		int noduriDr = 1 + calculeazaInaltimeArbore(arbore->nodDr);
-		return (1+noduriSt > 1+noduriDr ? noduriSt : noduriDr);
+		return 1 + max(calculeazaInaltimeArbore(arbore->nodSt), calculeazaInaltimeArbore(arbore->nodDr));
 	}
 	return 0;
 }

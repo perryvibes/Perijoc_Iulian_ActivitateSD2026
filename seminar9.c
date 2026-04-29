@@ -160,13 +160,22 @@ Masina getMasinaByID(Nod* arbore, int id) {
 
 int determinaNumarNoduri(Nod* arbore) {
 	//calculeaza numarul total de noduri din arborele binar de cautare
-
+	if (arbore) {
+		int noduriSt = determinaNumarNoduri(arbore->nodSt);
+		int noduriDr = determinaNumarNoduri(arbore->nodDr);
+		return 1 + noduriSt + noduriDr;
+	}
 	return 0;
 }
 
-int calculeazaInaltimeArbore(/*arbore de masini*/) {
+int calculeazaInaltimeArbore(Nod* arbore) {
 	//calculeaza inaltimea arborelui care este data de 
 	//lungimea maxima de la radacina pana la cel mai indepartat nod frunza
+	if (arbore) {
+		int noduriSt = 1 + calculeazaInaltimeArbore(arbore->nodSt);
+		int noduriDr = 1 + calculeazaInaltimeArbore(arbore->nodDr);
+		return (1+noduriSt > 1+noduriDr ? noduriSt : noduriDr);
+	}
 	return 0;
 }
 

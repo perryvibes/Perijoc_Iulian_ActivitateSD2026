@@ -72,7 +72,7 @@ void adaugaMasinaInArbore(Nod** arbore, Masina masinaNoua) {
 		if ((*arbore)->masina.id > masinaNoua.id) {
 			adaugaMasinaInArbore(&((*arbore)->nodSt), masinaNoua);
 		}
-		else if ((*arbore)->masina.id < masinaNoua.id) {
+		else if ((*arbore)->masina.id <= masinaNoua.id) { // am ales sa adaugam in partea din dreapta in caz ca e egal id-ul *presupunem
 			adaugaMasinaInArbore(&((*arbore)->nodDr), masinaNoua);
 		}
 	}
@@ -96,7 +96,11 @@ void afisareMasiniDinArbore(Nod* arbore) {
 	//prin apelarea functiei afisareMasina()
 	//parcurgerea arborelui poate fi realizata in TREI moduri
 	//folositi toate cele TREI moduri de parcurgere
-
+	if (arbore) { // Folosim RSD
+		afisareMasina(arbore->masina);
+		afisareMasiniDinArbore(arbore->nodSt);
+		afisareMasiniDinArbore(arbore->nodDr);
+	}
 }
 
 /*
@@ -131,8 +135,8 @@ void afisareOrdineSDR(Nod* arbore) {
 void dezalocareArboreDeMasini(Nod** arbore) {
 	//sunt dezalocate toate masinile si arborele de elemente
 	if (*arbore) {
-		dezalocareArboreDeMasini((*arbore)->nodSt);
-		dezalocareArboreDeMasini((*arbore)->nodDr);
+		dezalocareArboreDeMasini(&(*arbore)->nodSt);
+		dezalocareArboreDeMasini(&(*arbore)->nodDr);
 		free((*arbore)->nodSt);
 		free((*arbore)->nodDr);
 		free((*arbore));
@@ -146,10 +150,10 @@ Masina getMasinaByID(Nod* arbore, int id) {
 
 	if (arbore) {
 		if (arbore->masina.id > id) {
-			getMasinaByID(arbore->nodSt, id);
+			m = getMasinaByID(arbore->nodSt, id);
 		}
-		else if (arbore->masina.id <= id) { // vom alege daca e egal cu id-ul sa-l puna pe dreapta
-			getMasinaByID(arbore->nodDr, id);
+		else if (arbore->masina.id < id) {
+			m = getMasinaByID(arbore->nodDr, id);
 		}
 		else {
 			m = arbore->masina; //SC
@@ -179,18 +183,63 @@ int calculeazaInaltimeArbore(Nod* arbore) {
 	return 0;
 }
 
-float calculeazaPretTotal(/*arbore de masini*/) {
+float calculeazaPretTotal(Nod* arbore) {
 	//calculeaza pretul tuturor masinilor din arbore.
-	return 0;
+	if (arbore == NULL) return 0;
+	else {
+		float st = calculeazaPretTotal(arbore->nodSt);
+		float dr = calculeazaPretTotal(arbore->nodDr);
+		return arbore->masina.pret + st + dr;
+	}
 }
 
-float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSofer) {
+float calculeazaPretulMasinilorUnuiSofer(Nod* arbore, const char* numeSofer) {
 	//calculeaza pretul tuturor masinilor unui sofer.
-	return 0;
+	if (arbore == NULL) return 0;
+	else {
+		float st = calculeazaPretulMasinilorUnuiSofer(arbore->nodSt, numeSofer);
+		float dr = calculeazaPretulMasinilorUnuiSofer(arbore->nodDr, numeSofer);
+		if (strcmp(arbore->masina.numeSofer, numeSofer) == 0)  {
+			return arbore->masina.pret + st + dr;
+		}
+		return st + dr;
+	}
 }
 
 int main() {
 
+	Nod* arbore = citireArboreDeMasiniDinFisier("masiniArbore.txt");
+	afisareMasiniDinArbore(arbore);
+	
+	printf("\n================================\n");
+
+	printf("Numarul de noduri este: %d", determinaNumarNoduri(arbore));
+
+	printf("\n================================\n");
+
+	Masina m = (Masina){ 100,4,12321,"A6","Flory",'A' };
+	adaugaMasinaInArbore(&arbore, m);
+	afisareMasiniDinArbore(arbore);
+
+	printf("\n================================\n");
+
+	afisareMasina(getMasinaByID(arbore, 100));
+
+	printf("\n================================\n");
+
+	printf("Inaltime arbore: %d", calculeazaInaltimeArbore(arbore));
+
+	printf("\n================================\n");
+
+	printf("Pret total: %.2f", calculeazaPretTotal(arbore));	
+
+	printf("\n================================\n");
+
+	printf("Pret total masini pentru soferul Gigel: %.f", calculeazaPretulMasinilorUnuiSofer(arbore, "Gigel"));
+	
+	printf("\n================================\n");
+
+	dezalocareArboreDeMasini(&arbore);
 
 	return 0;
 }

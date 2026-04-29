@@ -147,6 +147,7 @@
     <Text Include="carti.txt" />
     <Text Include="masini.txt" />
     <Text Include="masini2.txt" />
+    <Text Include="masiniArbore.txt" />
     <Text Include="masiniGol.txt" />
     <Text Include="masiniUnaSingura.txt" />
   </ItemGroup>

@@ -73,5 +73,8 @@
     </Text>
     <Text Include="masiniGol.txt" />
     <Text Include="masiniUnaSingura.txt" />
+    <Text Include="masiniArbore.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

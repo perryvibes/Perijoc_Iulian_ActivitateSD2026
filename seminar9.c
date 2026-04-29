@@ -61,11 +61,11 @@ void adaugaMasinaInArbore(Nod** arbore, Masina masinaNoua) {
 	//astfel incat sa respecte princiippile de arbore binar de cautare
 	//dupa o anumita cheie pe care o decideti - poate fi ID
 
-	Nod* nou = (Nod*)malloc(sizeof(Nod));
-	nou->masina = masinaNoua;
-	nou->nodSt = NULL;
-	nou->nodDr = NULL;
 	if ((*arbore) == NULL) {
+		Nod* nou = (Nod*)malloc(sizeof(Nod));
+		nou->masina = masinaNoua;
+		nou->nodSt = NULL;
+		nou->nodDr = NULL;
 		(*arbore) = nou;
 	}
 	else {
@@ -128,18 +128,39 @@ void afisareOrdineSDR(Nod* arbore) {
 	}
 }
 
-void dezalocareArboreDeMasini(/*arbore de masini*/) {
+void dezalocareArboreDeMasini(Nod** arbore) {
 	//sunt dezalocate toate masinile si arborele de elemente
+	if (*arbore) {
+		dezalocareArboreDeMasini((*arbore)->nodSt);
+		dezalocareArboreDeMasini((*arbore)->nodDr);
+		free((*arbore)->nodSt);
+		free((*arbore)->nodDr);
+		free((*arbore));
+		*arbore = NULL;
+	}
 }
 
-Masina getMasinaByID(/*arborele de masini*/int id) {
-	Masina m;
+Masina getMasinaByID(Nod* arbore, int id) {
+	
+	Masina m = {0,0,0,NULL,NULL,0};
 
+	if (arbore) {
+		if (arbore->masina.id > id) {
+			getMasinaByID(arbore->nodSt, id);
+		}
+		else if (arbore->masina.id < id) {
+			getMasinaByID(arbore->nodDr, id);
+		}
+		else {
+			m = arbore->masina; //SC
+		}
+	}
 	return m;
 }
 
-int determinaNumarNoduri(/*arborele de masini*/) {
+int determinaNumarNoduri(Nod* arbore) {
 	//calculeaza numarul total de noduri din arborele binar de cautare
+
 	return 0;
 }
 

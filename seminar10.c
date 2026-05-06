@@ -133,24 +133,43 @@ void adaugaMasinaInArboreEchilibrat(Nod** radacina, Masina masinaNoua) {
 
 }
 
-void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
+Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
 	//prin apelul repetat al functiei citireMasinaDinFisier()
 	//ATENTIE - la final inchidem fisierul/stream-ul
-
-
-
+	FILE* fptr = fopen(numeFisier, "r");
+	Nod* radacina = NULL;
+	while (!feof(fptr)) {
+		Masina masina = citireMasinaDinFisier(fptr);
+		adaugaMasinaInArboreEchilibrat(&radacina, masina);
+	}
+	fclose(fptr);
+	return radacina;
 }
 
-void afisareMasiniDinArbore(/*arbore de masini*/) {
+void afisareMasiniDinArbore(Nod* radacina) {
 	//afiseaza toate elemente de tip masina din arborele creat
 	//prin apelarea functiei afisareMasina()
 	//parcurgerea arborelui poate fi realizata in TREI moduri
-	//folositi toate cele TREI moduri de parcurgere
+	//folositi toate cele TREI moduri de 
+	if (radacina) {
+		afisareMasina(radacina->masina);
+		afisareMasiniDinArbore(radacina->nodSt);
+		afisareMasiniDinArbore(radacina->nodDr);
+	}
 }
 
-void dezalocareArboreDeMasini(/*arbore de masini*/) {
+void dezalocareArboreDeMasini(Nod** radacina) {
 	//sunt dezalocate toate masinile si arborele de elemente
+	if (*radacina) {
+		dezalocareArboreDeMasini(&(*radacina)->nodSt);
+		dezalocareArboreDeMasini(&(*radacina)->nodDr);
+		free((*radacina)->masina.model);
+		free((*radacina)->masina.numeSofer);
+		free(*radacina);
+		*radacina = NULL;
+	}
+
 }
 
 //Preluati urmatoarele functii din laboratorul precedent.
@@ -166,6 +185,10 @@ float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSo
 
 int main() {
 
+	Nod* radacina = citireArboreDeMasiniDinFisier("masini.txt");
+	afisareMasiniDinArbore(radacina);
+
+	dezalocareArboreDeMasini(&radacina);
 
 	return 0;
 }

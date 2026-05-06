@@ -93,16 +93,53 @@ void rotireDreapta(Nod** radacina) {
 	(*radacina) = aux;
 }
 
-void adaugaMasinaInArboreEchilibrat(/*arborele de masini*/ Masina masinaNoua) {
+void adaugaMasinaInArboreEchilibrat(Nod** radacina, Masina masinaNoua) {
 	//adauga o noua masina pe care o primim ca parametru in arbore,
 	//astfel incat sa respecte principiile de arbore binar de cautare ECHILIBRAT
 	//dupa o anumita cheie pe care o decideti - poate fi ID
+
+	if ((*radacina)) {
+		if ((*radacina)->masina.id > masinaNoua.id) {
+			adaugaMasinaInArboreEchilibrat(&(*radacina)->nodSt, masinaNoua);
+		}
+		else {
+			adaugaMasinaInArboreEchilibrat(&(*radacina)->nodDr, masinaNoua);
+		}
+		int grad = calculGE((*radacina));
+		if (grad == 2) { // dezechilibru pe partea stanga
+			if (calculGE((*radacina)->nodSt) == -1) {
+				// deoarece este -1 trebuie sa efectuam DOUA rotiri
+				rotireStanga(&(*radacina)->nodSt);
+				rotireDreapta(&(*radacina));
+			}
+			else {
+				rotireDreapta(&(*radacina));
+			}
+		}
+		else if (grad == -2) {
+			if (calculGE((*radacina)->nodDr) == 1) {
+				rotireDreapta(&(*radacina)->nodDr);
+			}
+			rotireStanga(radacina);
+		}
+	}
+	else {
+		Nod* nou = (Nod*)malloc(sizeof(Nod));
+		nou->masina = masinaNoua;
+		nou->nodSt = NULL;
+		nou->nodDr = NULL;
+		(*radacina) = nou;
+	}
+
 }
 
 void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
 	//prin apelul repetat al functiei citireMasinaDinFisier()
 	//ATENTIE - la final inchidem fisierul/stream-ul
+
+
+
 }
 
 void afisareMasiniDinArbore(/*arbore de masini*/) {

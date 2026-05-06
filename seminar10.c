@@ -181,12 +181,24 @@ int determinaNumarNoduri(/*arborele de masini*/);
 
 float calculeazaPretTotal(/*arbore de masini*/);
 
-float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSofer);
+float calculeazaPretulMasinilorUnuiSofer(Nod* radacina, const char* numeSofer) {
+	float sum = 0;
+	if (radacina) {
+		sum = calculeazaPretulMasinilorUnuiSofer(radacina->nodSt, numeSofer);
+		sum = calculeazaPretulMasinilorUnuiSofer(radacina->nodDr, numeSofer);
+		if (strcmp(radacina->masina.numeSofer, numeSofer) == 0) {
+			sum += radacina->masina.pret;
+		}
+	}
+	return sum;
+}
 
 int main() {
 
 	Nod* radacina = citireArboreDeMasiniDinFisier("masini.txt");
 	afisareMasiniDinArbore(radacina);
+
+	printf("%.2f", calculeazaPretulMasinilorUnuiSofer(radacina, "Ionescu"));
 
 	dezalocareArboreDeMasini(&radacina);
 

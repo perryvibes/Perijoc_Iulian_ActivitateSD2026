@@ -60,7 +60,7 @@ Heap initializareHeap(int lungime) {
 }
 
 void filtreazaHeap(Heap heap, int pozNod) {
-	//filtreaza heap-ul pentru nodul a carei pozitie o primeste ca parametru
+	// practic metoda de functionare a heap-ului
 	int pozMax = pozNod;
 	int pozNodStanga = 2 * pozNod + 1;
 	int pozNodDreapta = 2 * pozNod + 2;
@@ -85,14 +85,28 @@ void filtreazaHeap(Heap heap, int pozNod) {
 }
 
 Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
-	//citim toate masinile din fisier si le stocam intr-un heap 
-	// pe care trebuie sa il filtram astfel incat sa respecte 
-	// principiul de MAX-HEAP sau MIN-HEAP dupa un anumit criteriu
-	// sunt citite toate elementele si abia apoi este filtrat vectorul
+
+	// citim prima data masinile din fisier si le adaugam in heap
+	Heap heapMasini = initializareHeap(10);
+	FILE* fptr = fopen(numeFisier, "r");
+	while (!feof(fptr)) {
+		heapMasini.vector[heapMasini.nrMasini++] = citireMasinaDinFisier(fptr);
+	}
+	fclose(fptr);
+	// folosim functia heap-ului pentru a filtra elementele. Cum procedam? 
+	// Preluam ultimul parinte si apoi decrementam spre radacina.
+	// Folosim filtrarea pentru fiecare nod incepand de la nod parinte spre radacina.
+	// FORMULA ultimului parinte = (nrMasini-2)/2
+	for (int i = (heapMasini.nrMasini - 2) / 2; i >= 0; i--) {
+		filtreazaHeap(heapMasini, i);
+	}
+	return heapMasini;
 }
 
 void afisareHeap(Heap heap) {
-	//afiseaza elementele vizibile din heap
+	for (int i = 0; i < heap.nrMasini; i++) {
+		afisareMasina(heap.vector[i]);
+	}
 }
 
 void afiseazaHeapAscuns(Heap heap) {

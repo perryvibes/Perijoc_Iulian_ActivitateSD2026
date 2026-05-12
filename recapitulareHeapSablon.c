@@ -52,12 +52,36 @@ void afisareMasina(Masina masina) {
 }
 
 Heap initializareHeap(int lungime) {
-	//initializeaza heap-ul cu 0 elemente 
-	//dar cu o lungime primita ca parametru
+	Heap heapMasini;
+	heapMasini.lungime = lungime;
+	heapMasini.vector = (Masina*)malloc(sizeof(Masina) * lungime);
+	heapMasini.nrMasini = 0;
+	return heapMasini;
 }
 
-void filtreazaHeap(Heap heap, int pozitieNod) {
+void filtreazaHeap(Heap heap, int pozNod) {
 	//filtreaza heap-ul pentru nodul a carei pozitie o primeste ca parametru
+	int pozMax = pozNod;
+	int pozNodStanga = 2 * pozNod + 1;
+	int pozNodDreapta = 2 * pozNod + 2;
+	if (pozNodStanga < heap.nrMasini //verificam sa fie mai mic decat nr de masini vizibile
+		&& heap.vector[pozNodStanga].pret > heap.vector[pozNod].pret)
+	{
+		pozMax = pozNodStanga;
+	}
+	if (pozNodDreapta < heap.nrMasini
+		&& heap.vector[pozNodDreapta].pret > heap.vector[pozNod].pret)
+	{
+		pozMax = pozNodDreapta;
+	}
+	if (pozMax != pozNod) { // avem modificari la nivelul pozitiilor
+		Masina aux = heap.vector[pozMax];
+		heap.vector[pozMax] = heap.vector[pozNod];
+		heap.vector[pozNod] = aux;
+	}
+	if (pozMax <= (heap.nrMasini - 2) / 2) {
+		filtreazaHeap(heap, pozMax);
+	}
 }
 
 Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {

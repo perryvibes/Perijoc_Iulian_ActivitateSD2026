@@ -78,9 +78,9 @@ void filtreazaHeap(Heap heap, int pozNod) {
 		Masina aux = heap.vector[pozMax];
 		heap.vector[pozMax] = heap.vector[pozNod];
 		heap.vector[pozNod] = aux;
-	}
-	if (pozMax <= (heap.nrMasini - 2) / 2) {
-		filtreazaHeap(heap, pozMax);
+		if (pozMax <= (heap.nrMasini - 2) / 2) {
+			filtreazaHeap(heap, pozMax);
+		}
 	}
 }
 
@@ -104,27 +104,74 @@ Heap citireHeapDeMasiniDinFisier(const char* numeFisier) {
 }
 
 void afisareHeap(Heap heap) {
+	// afisare elemente VIZIBILE, adica numarul de masini si nu toata lungimea HEAP-ULUI!
 	for (int i = 0; i < heap.nrMasini; i++) {
 		afisareMasina(heap.vector[i]);
 	}
 }
 
 void afiseazaHeapAscuns(Heap heap) {
-	//afiseaza elementele ascunse din heap
+	// afisare elemente ASCUNSE, adica incepand de la nrMasini pana la lungimea HEAP-ULUI!
+	for (int i = heap.nrMasini; i < heap.lungime; i++) {
+		afisareMasina(heap.vector[i]);
+	}
 }
 
-Masina extrageMasina(void* heap) {
+Masina extrageMasina(Heap* heapMasini) {
 	//extrage si returneaza masina de pe prima pozitie
 	//elementul extras nu il stergem...doar il ascundem
+	
+	// 1.) !!! Pentru a ascunde un element trebuie sa il mutam dupa nrMasini, adica intre nrMasini si lungimea HEAP-ULUI!
+	// 2.) Folosim metoda paharelor
+	Masina aux = { 0,0,0,NULL,NULL,0 };
+	
+	if (heapMasini->nrMasini > 0) {
+		aux = heapMasini->vector[0]; // shallow copy!!
+		heapMasini->vector[0] = heapMasini->vector[(heapMasini->nrMasini) - 1];
+		heapMasini->vector[(heapMasini->nrMasini) - 1] = aux;
+		heapMasini->nrMasini--; // deoarece am extras, decrementam nrMasini cu un element
+
+		// 3.) Vom filtra din nou tot heap-ul deoarece nu mai respecta principiul.
+		for (int i = (heapMasini->nrMasini - 2) / 2; i >= 0; i--) {
+			filtreazaHeap(*heapMasini, i);
+		}
+	}
+	return aux;
 }
 
 
 void dezalocareHeap(Heap* heap) {
 	//sterge toate elementele din Heap
+	// INCLUSIV si elementele ASCUNSE!
+	if (heap->nrMasini > 0) {
+		for (int i = 0; i < heap->lungime; i++) {
+			if (heap->vector[i].model != NULL) {
+				free(heap->vector[i].model);
+			}
+			if (heap->vector[i].numeSofer != NULL) {
+				free(heap->vector[i].numeSofer);
+			}
+		}
+		free(heap->vector);
+		heap->lungime = 0;
+		heap->nrMasini = 0;
+		heap->vector = NULL;
+	}
 }
 
 int main() {
 
+	Heap heapMasini = citireHeapDeMasiniDinFisier("masiniArbore.txt");
+	afisareHeap(heapMasini);
+	printf("\n===========================\n");
+	Masina m = extrageMasina(&heapMasini);
+	afisareMasina(m);
+	printf("\n===========================\n");
+	extrageMasina(&heapMasini);
+	extrageMasina(&heapMasini);
+	afiseazaHeapAscuns(heapMasini); // va fi crescator!! [*Heap Sorting]
+
+	dezalocareHeap(&heapMasini);
 
 	return 0;
 }

@@ -55,19 +55,19 @@ void afisareMasina(Masina masina) {
 
 
 void adaugaMasinaInArbore(Nod** radacina, Masina masinaNoua) {
-	if (*radacina == NULL) {
+	if ((*radacina) == NULL) {
 		Nod* nou = (Nod*)malloc(sizeof(Nod));
 		nou->masina = masinaNoua;
 		nou->NodSt = NULL;
 		nou->NodDr = NULL;
 		(*radacina) = nou;
 	}
-	if (*radacina) {
+	else {
 		if ((*radacina)->masina.id > masinaNoua.id) {
-			adaugaMasinaInArbore((*radacina)->NodSt, masinaNoua);
+			adaugaMasinaInArbore(&((*radacina)->NodSt), masinaNoua);
 		}
 		if ((*radacina)->masina.id <= masinaNoua.id) { // in caz ca avem aceeasi valoare preferam sa il punem pe nodurile din dreapta
-			adaugaMasinaInArbore((*radacina)->NodDr, masinaNoua);
+			adaugaMasinaInArbore(&((*radacina)->NodDr), masinaNoua);
 		}
 	}
 }
@@ -78,16 +78,12 @@ Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	while (!feof(fptr)) {
 		adaugaMasinaInArbore(&arbore, citireMasinaDinFisier(fptr));
 	}
+	fclose(fptr);
 	return arbore;
 }
 
-void afisareMasiniDinArbore(Nod* radacina) {
-	// Sunt 3 MODURI de parcurgere.
-	// parcurgerea poate fi realizata prin: RSD,SRD,SDR
-
-	// vom folosi parcurgerea SRD
-	afisareMasinaArboreSRD(radacina);
-}
+// Sunt 3 MODURI de parcurgere.
+// parcurgerea poate fi realizata prin: RSD,SRD,SDR
 
 // 1. PARCURGERE RSD
 void afisareMasinaArboreRSD(Nod* radacina) {
@@ -120,8 +116,8 @@ void afisareMasinaArboreSDR(Nod* radacina) {
 void dezalocareArboreDeMasini(Nod** radacina) {
 	//sunt dezalocate toate masinile si arborele de elemente
 	if (*radacina) {
-		dezalocareArboreDeMasini((*radacina)->NodSt);
-		dezalocareArboreDeMasini((*radacina)->NodDr);
+		dezalocareArboreDeMasini(&(*radacina)->NodSt);
+		dezalocareArboreDeMasini(&(*radacina)->NodDr);
 		free((*radacina)->masina.model);
 		free((*radacina)->masina.numeSofer);
 		free(*radacina);
@@ -129,11 +125,11 @@ void dezalocareArboreDeMasini(Nod** radacina) {
 	}
 }
 
-Masina getMasinaByID(/*arborele de masini*/int id) {
-	Masina m;
-
-	return m;
-}
+//Masina getMasinaByID(/*arborele de masini*/int id) {
+//	Masina m;
+//
+//	return m;
+//}
 
 int determinaNumarNoduri(/*arborele de masini*/) {
 	//calculeaza numarul total de noduri din arborele binar de cautare
@@ -157,7 +153,7 @@ float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSo
 }
 
 int main() {
-
-
+	Nod* arbore = citireArboreDeMasiniDinFisier("masiniArbore.txt");
+	afisareMasinaArboreSDR(arbore);
 	return 0;
 }

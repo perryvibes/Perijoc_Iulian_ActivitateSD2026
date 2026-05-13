@@ -154,6 +154,7 @@
     <Text Include="masiniArbore.txt" />
     <Text Include="masiniGol.txt" />
     <Text Include="masiniUnaSingura.txt" />
+    <Text Include="muchii.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

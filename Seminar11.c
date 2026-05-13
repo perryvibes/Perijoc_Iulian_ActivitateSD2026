@@ -52,20 +52,65 @@ void afisareMasina(Masina masina) {
 //dorim stocarea unui graf intr-o lista de liste
 //astfel avem nod ListaPrincipala si NodListaSecundara
 
-//2.
-//functii de inserare in liste
-//si in principala si in secundara
+typedef struct Nod { // GRAFUL       O-O-O-O-O  (Lista principala)
+	Masina info;
+	struct Nod* next;
+	struct NodS* vecini;
 
-//3.
-//functie de cautarea in lista principala dupa ID
-void* cautaNodDupaID(void* listaPrincipala, int id) {
+} Nod;
 
+typedef struct NodS { // Listele din GRAF       O-O-O-O-O  (Listele secundare)
+	struct Nod* info; //						| | | | |
+	struct NodS* next; //						v v v v v
+} NodS; //										N N	N N	N
+
+void inserareInListaPrincipala(Nod** graf, Masina masinaNoua ) {
+	Nod* nou = malloc(sizeof(Nod));
+	nou->info = masinaNoua;
+	nou->next = NULL;
+	nou->vecini = NULL;
+	if ((*graf) == NULL) {
+		(*graf) = nou;
+	}
+	else {
+		Nod* p = *graf;
+		while (p->next != NULL) {
+			p = p->next;
+		}
+		p->next = nou;
+	}
 }
 
-//4.
-//inserare muchie
-void inserareMuchie(void* listaPrincipala, int idStart, int idStop) {
+void inserareInListaSecundara(NodS** cap, Nod* vecin) {
+	NodS* nou = malloc(sizeof(NodS));
+	nou->next = NULL;
+	nou->info = vecin;
+	if ((*cap) == NULL) {
+		(*cap) = nou;
+	}
+	else {
+		NodS* p = (*cap);
+		while (p->next) {
+			p = p->next;
+		}
+		p = nou;
+	}
+}
 
+void* cautaNodDupaID(Nod* graf, int id) {
+	while (graf && graf->info.id != id) {
+		graf = graf->next;
+	}
+	return graf;
+}
+
+void inserareMuchie(Nod* graf, int idStart, int idStop) {
+	Nod* nodStart = cautaNodDupaID(graf,idStart);
+	Nod* nodStop = cautaNodDupaID(graf, idStop);
+	if (nodStart != NULL && nodStop != NULL) {
+		inserareInListaSecundara(&nodStart->vecini, nodStop);
+		inserareInListaSecundara(&nodStop->vecini, nodStart);
+	}
 }
 
 

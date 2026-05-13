@@ -114,16 +114,26 @@ void inserareMuchie(Nod* graf, int idStart, int idStop) {
 }
 
 
-void* citireNoduriMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+Nod* citireNoduriMasiniDinFisier(const char* numeFisier) {
+	FILE* fptr = fopen(numeFisier, "r");
+	Nod* graf = NULL;
+	while (!feof(fptr)) {
+		inserareInListaPrincipala(graf, citireMasinaDinFisier(fptr));
+	}
+	fclose(fptr);
+	return graf;
 }
 
-void citireMuchiiDinFisier(const char* numeFisier) {
+void citireMuchiiDinFisier(Nod* graf, const char* numeFisier) {
 	//functia primeste numele fisierului, il deschide si citeste 
 	//toate id-urile de start si stop pentru fiecare muchie
 	//ATENTIE - la final inchidem fisierul/stream-ul
+	FILE* fptr = fopen(numeFisier, "r");
+	int start, stop;
+	while (!feof(fptr)) {
+		fscanf(fptr, "%d %d", &start, &stop);
+		inserareMuchie(graf, start, stop);
+	}
 }
 
 void dezalocareNoduriGraf(void* listaPrincipala) {

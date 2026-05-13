@@ -141,8 +141,19 @@ void dezalocareNoduriGraf(void* listaPrincipala) {
 	//si toate nodurile celor doua liste
 }
 
+void afiseazaListaSecundara(Nod* graf, int id) { // *vecini
+	Nod* nou = cautaNodDupaID(graf, id);
+	NodS* aux = nou->vecini;
+	while (aux) {
+		afisareMasina(aux->info->info);
+		aux = aux->next;
+	}
+}	
+
 int main() {
 
-
+	Nod* graf = citireNoduriMasiniDinFisier("masini.txt");
+	citireMuchiiDinFisier(graf, "muchii.txt");
+	afiseazaListaSecundara(graf, 8);
 	return 0;
 }

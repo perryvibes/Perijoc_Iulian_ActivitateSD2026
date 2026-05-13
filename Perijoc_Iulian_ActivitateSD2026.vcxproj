@@ -133,6 +133,7 @@
     <ClCompile Include="LSMoneda.c" />
     <ClCompile Include="Magazin.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="recapitulareArboreABCSablon.c" />
     <ClCompile Include="recapitulareHeapSablon.c" />
     <ClCompile Include="seminar1.c" />
     <ClCompile Include="seminar10.c" />

@@ -66,6 +66,9 @@
     <ClCompile Include="recapitulareHeapSablon.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="recapitulareArboreABCSablon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">

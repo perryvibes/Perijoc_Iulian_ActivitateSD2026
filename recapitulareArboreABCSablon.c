@@ -125,31 +125,68 @@ void dezalocareArboreDeMasini(Nod** radacina) {
 	}
 }
 
-//Masina getMasinaByID(/*arborele de masini*/int id) {
-//	Masina m;
-//
-//	return m;
-//}
-
-int determinaNumarNoduri(/*arborele de masini*/) {
-	//calculeaza numarul total de noduri din arborele binar de cautare
-	return 0;
+Masina getMasinaByID(Nod* radacina, int id) {
+	Masina m = {0,0,0,NULL,NULL,0};
+	if (radacina) {
+		if (radacina->masina.id > id) {
+			m = getMasinaByID(radacina->NodSt, id);
+		}
+		else if (radacina->masina.id < id) {
+			m = getMasinaByID(radacina->NodDr, id);
+		} else {
+			m = radacina->masina;
+			// vom face un deep copy asa ca exercitiu
+			m.model = malloc((strlen(radacina->masina.model) + 1) * sizeof(char));
+			strcpy(m.model, radacina->masina.model);
+			m.numeSofer = malloc((strlen(radacina->masina.numeSofer) + 1) * sizeof(char));
+			strcpy(m.numeSofer, radacina->masina.numeSofer);
+		}
+	}
+	return m;
 }
 
-int calculeazaInaltimeArbore(/*arbore de masini*/) {
-	//calculeaza inaltimea arborelui care este data de 
-	//lungimea maxima de la radacina pana la cel mai indepartat nod frunza
-	return 0;
+int determinaNumarNoduri(Nod* radacina) {
+	if (radacina) {
+		int nrNoduriSt = determinaNumarNoduri(radacina->NodSt);
+		int nrNoduriDr = determinaNumarNoduri(radacina->NodDr);
+		return 1 + nrNoduriSt + nrNoduriDr;
+	}
+	else {
+		return 0;
+	}
 }
 
-float calculeazaPretTotal(/*arbore de masini*/) {
-	//calculeaza pretul tuturor m`asinilor din arbore.
-	return 0;
+int calculeazaInaltimeArbore(Nod* radacina) {
+	if (radacina) {
+		int maxSt = calculeazaInaltimeArbore(radacina->NodSt);
+		int maxDr = calculeazaInaltimeArbore(radacina->NodDr);
+		return 1 + max(maxSt,maxDr);
+	}
+	else {
+		return 0;
+	}
 }
 
-float calculeazaPretulMasinilorUnuiSofer(/*arbore de masini*/ const char* numeSofer) {
-	//calculeaza pretul tuturor masinilor unui sofer.
-	return 0;
+float calculeazaPretTotal(Nod* radacina) {
+	if (radacina) {
+		float sumStanga = calculeazaPretTotal(radacina->NodSt);
+		float sumDreapta = calculeazaPretTotal(radacina->NodDr);
+		return radacina->masina.pret + sumStanga + sumDreapta;
+	}
+	else {
+		return 0;
+	}
+}
+
+float calculeazaPretulMasinilorUnuiSofer(Nod* radacina, const char* numeSofer) {
+	if (radacina) {
+		float st = calculeazaPretulMasinilorUnuiSofer(radacina->NodSt, numeSofer);
+		float dr = calculeazaPretulMasinilorUnuiSofer(radacina->NodDr, numeSofer);
+		if (strcmp(radacina->masina.numeSofer, numeSofer) == 0) {
+			return radacina->masina.pret + st + dr;
+		}
+		return st + dr;
+	}
 }
 
 int main() {

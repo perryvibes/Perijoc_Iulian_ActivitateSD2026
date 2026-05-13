@@ -137,6 +137,7 @@
     <ClCompile Include="recapitulareHeapSablon.c" />
     <ClCompile Include="seminar1.c" />
     <ClCompile Include="seminar10.c" />
+    <ClCompile Include="Seminar11.c" />
     <ClCompile Include="seminar2.c" />
     <ClCompile Include="seminar3.c" />
     <ClCompile Include="seminar4.c" />

@@ -55,9 +55,6 @@ void afisareMasina(Masina masina) {
 
 
 void adaugaMasinaInArbore(Nod** radacina, Masina masinaNoua) {
-	//adauga o noua masina pe care o primim ca parametru in arbore,
-	//astfel incat sa respecte princiippile de arbore binar de cautare
-	//dupa o anumita cheie pe care o decideti - poate fi ID
 	if (*radacina == NULL) {
 		Nod* nou = (Nod*)malloc(sizeof(Nod));
 		nou->masina = masinaNoua;
@@ -75,21 +72,61 @@ void adaugaMasinaInArbore(Nod** radacina, Masina masinaNoua) {
 	}
 }
 
-void* citireArboreDeMasiniDinFisier(const char* numeFisier) {
-	//functia primeste numele fisierului, il deschide si citeste toate masinile din fisier
-	//prin apelul repetat al functiei citireMasinaDinFisier()
-	//ATENTIE - la final inchidem fisierul/stream-ul
+Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
+	Nod* arbore = NULL;
+	FILE* fptr = fopen(numeFisier, "r");
+	while (!feof(fptr)) {
+		adaugaMasinaInArbore(&arbore, citireMasinaDinFisier(fptr));
+	}
+	return arbore;
 }
 
-void afisareMasiniDinArbore(/*arbore de masini*/) {
-	//afiseaza toate elemente de tip masina din arborele creat
-	//prin apelarea functiei afisareMasina()
-	//parcurgerea arborelui poate fi realizata in TREI moduri
-	//folositi toate cele TREI moduri de parcurgere
+void afisareMasiniDinArbore(Nod* radacina) {
+	// Sunt 3 MODURI de parcurgere.
+	// parcurgerea poate fi realizata prin: RSD,SRD,SDR
+
+	// vom folosi parcurgerea SRD
+	afisareMasinaArboreSRD(radacina);
 }
 
-void dezalocareArboreDeMasini(/*arbore de masini*/) {
+// 1. PARCURGERE RSD
+void afisareMasinaArboreRSD(Nod* radacina) {
+	if (radacina) {
+		// se implementeaza in ordinea acronimului, RSD - radacina,stanga,dreapta
+		afisareMasina(radacina->masina);
+		afisareMasinaArboreRSD(radacina->NodSt);
+		afisareMasinaArboreRSD(radacina->NodDr);
+	}
+}
+// 2. PARCURGERE SRD
+void afisareMasinaArboreSRD(Nod* radacina) {
+	if (radacina) {
+		// se implementeaza in ordinea acronimului, SRD - stanga,radacina,dreapta
+		afisareMasinaArboreRSD(radacina->NodSt);
+		afisareMasina(radacina->masina);
+		afisareMasinaArboreRSD(radacina->NodDr);
+	}
+}
+// 3. PARCURGERE SDR
+void afisareMasinaArboreSDR(Nod* radacina) {
+	if (radacina) {
+		// se implementeaza in ordinea acronimului, SRD - stanga,dreapta,radacina
+		afisareMasinaArboreRSD(radacina->NodSt);
+		afisareMasinaArboreRSD(radacina->NodDr);
+		afisareMasina(radacina->masina);
+	}
+}
+
+void dezalocareArboreDeMasini(Nod** radacina) {
 	//sunt dezalocate toate masinile si arborele de elemente
+	if (*radacina) {
+		dezalocareArboreDeMasini((*radacina)->NodSt);
+		dezalocareArboreDeMasini((*radacina)->NodDr);
+		free((*radacina)->masina.model);
+		free((*radacina)->masina.numeSofer);
+		free(*radacina);
+		*radacina = NULL;
+	}
 }
 
 Masina getMasinaByID(/*arborele de masini*/int id) {

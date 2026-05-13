@@ -118,8 +118,8 @@ void dezalocareArboreDeMasini(Nod** radacina) {
 	if (*radacina) {
 		dezalocareArboreDeMasini(&(*radacina)->NodSt);
 		dezalocareArboreDeMasini(&(*radacina)->NodDr);
-		free((*radacina)->masina.model);
-		free((*radacina)->masina.numeSofer);
+		free((*radacina)->NodSt);
+		free((*radacina)->NodDr);
 		free(*radacina);
 		*radacina = NULL;
 	}
@@ -179,18 +179,54 @@ float calculeazaPretTotal(Nod* radacina) {
 }
 
 float calculeazaPretulMasinilorUnuiSofer(Nod* radacina, const char* numeSofer) {
-	if (radacina) {
+	if (radacina == NULL) {
+		return 0;
+	}
+	else {
 		float st = calculeazaPretulMasinilorUnuiSofer(radacina->NodSt, numeSofer);
 		float dr = calculeazaPretulMasinilorUnuiSofer(radacina->NodDr, numeSofer);
 		if (strcmp(radacina->masina.numeSofer, numeSofer) == 0) {
 			return radacina->masina.pret + st + dr;
 		}
-		return st + dr;
+		else {
+			return st + dr;
+		}
 	}
 }
 
 int main() {
 	Nod* arbore = citireArboreDeMasiniDinFisier("masiniArbore.txt");
 	afisareMasinaArboreSDR(arbore);
+	
+	printf("\n================================\n");
+
+	printf("Numarul de noduri este: %d", determinaNumarNoduri(arbore));
+
+	printf("\n================================\n");
+
+	Masina m = (Masina){ 100,4,12321,"A6","Flory",'A' };
+	adaugaMasinaInArbore(&arbore, m);
+	afisareMasinaArboreSDR(arbore);
+
+	printf("\n================================\n");
+
+	afisareMasina(getMasinaByID(arbore, 100));
+
+	printf("\n================================\n");
+
+	printf("Inaltime arbore: %d", calculeazaInaltimeArbore(arbore));
+
+	printf("\n================================\n");
+
+	printf("Pret total: %.2f", calculeazaPretTotal(arbore));	
+
+	printf("\n================================\n");
+
+	printf("Pret total masini pentru soferul Gigel: %.f", calculeazaPretulMasinilorUnuiSofer(arbore, "Gigel"));
+	
+	printf("\n================================\n");
+
+	dezalocareArboreDeMasini(&arbore);
+
 	return 0;
 }

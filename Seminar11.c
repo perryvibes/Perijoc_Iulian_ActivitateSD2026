@@ -118,7 +118,7 @@ Nod* citireNoduriMasiniDinFisier(const char* numeFisier) {
 	FILE* fptr = fopen(numeFisier, "r");
 	Nod* graf = NULL;
 	while (!feof(fptr)) {
-		inserareInListaPrincipala(graf, citireMasinaDinFisier(fptr));
+		inserareInListaPrincipala(&graf, citireMasinaDinFisier(fptr));
 	}
 	fclose(fptr);
 	return graf;
@@ -136,9 +136,28 @@ void citireMuchiiDinFisier(Nod* graf, const char* numeFisier) {
 	}
 }
 
-void dezalocareNoduriGraf(void* listaPrincipala) {
+void dezalocareNoduriGraf(Nod** graf) {
 	//sunt dezalocate toate masinile din graf 
 	//si toate nodurile celor doua liste
+	if (*graf == NULL) return;
+	else {
+		Nod* p = *graf;
+		while (p) {
+			NodS* s = p->vecini;
+			while (s) {
+				NodS* aux = s;
+				s = s->next;
+				free(aux);
+			}
+			free(p->info.model);
+			free(p->info.numeSofer);
+
+			Nod* temp = p;
+			p = p->next;
+			free(temp);
+		}
+	}
+	*graf = NULL;
 }
 
 void afiseazaListaSecundara(Nod* graf, int id) { // *vecini
@@ -155,5 +174,6 @@ int main() {
 	Nod* graf = citireNoduriMasiniDinFisier("masini.txt");
 	citireMuchiiDinFisier(graf, "muchii.txt");
 	afiseazaListaSecundara(graf, 8);
+	dezalocareNoduriGraf(&graf);
 	return 0;
 }

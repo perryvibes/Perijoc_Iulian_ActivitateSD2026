@@ -68,7 +68,7 @@ char calculeazaGE(Nod* radacina) {
 // procedura de rotire la stanga
 void rotireStanga(Nod** radacina) {
 	Nod* aux = (*radacina)->NodDr;
-	(*radacina)->NodDr = (*radacina)->NodSt;
+	(*radacina)->NodDr = aux->NodSt;
 	aux->NodSt = (*radacina);
 	(*radacina) = aux;
 }
@@ -77,7 +77,7 @@ void rotireStanga(Nod** radacina) {
 
 void rotireDreapta(Nod** radacina) {
 	Nod* aux = (*radacina)->NodSt;
-	(*radacina)->NodSt = (*radacina)->NodDr;
+	(*radacina)->NodSt = aux->NodDr;
 	aux->NodDr = (*radacina);
 	(*radacina) = aux;
 }

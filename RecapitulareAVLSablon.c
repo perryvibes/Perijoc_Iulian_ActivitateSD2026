@@ -16,10 +16,11 @@ struct StructuraMasina {
 };
 typedef struct StructuraMasina Masina;
 
+//creare structura pentru un nod dintr-un arbore binar de cautare
 typedef struct Nod {
 	Masina masina;
-	struct Nod* NodSt;
-	struct Nod* NodDr;
+	struct Nod* nodSt;
+	struct Nod* nodDr;
 } Nod;
 
 Masina citireMasinaDinFisier(FILE* file) {
@@ -53,35 +54,41 @@ void afisareMasina(Masina masina) {
 	printf("Serie: %c\n\n", masina.serie);
 }
 
-int calculeazaInaltimeArbore(Nod* radacina) {
+char calculeazaInaltimeArbore(Nod* radacina) {
 	if (radacina == NULL) return 0;
 	else {
-		return 1 + max(calculeazaInaltimeArbore(radacina->NodSt), calculeazaInaltimeArbore(radacina->NodDr));
+		return 1 + max(calculeazaInaltimeArbore(radacina->nodSt), calculeazaInaltimeArbore(radacina->nodDr));
 	}
 }
 
-// calculare grad de echilibru
-char calculeazaGE(Nod* radacina) {
-	return calculeazaInaltimeArbore(radacina->NodSt) - calculeazaInaltimeArbore(radacina->NodDr);
+//ALTE FUNCTII NECESARE:
+// - aici veti adauga noile functii de care aveti nevoie.
+
+char calculareGE(Nod* radacina) {
+	if (radacina == NULL) return 0;
+	else {
+		return calculeazaInaltimeArbore(radacina->nodSt) - calculeazaInaltimeArbore(radacina->nodDr);
+	}
 }
 
-// procedura de rotire la stanga
 void rotireStanga(Nod** radacina) {
-	Nod* aux = (*radacina)->NodDr;
-	(*radacina)->NodDr = aux->NodSt;
-	aux->NodSt = (*radacina);
-	(*radacina) = aux;
+	if (*radacina == NULL) return;
+	else {
+		Nod* aux = (*radacina)->nodDr;
+		(*radacina)->nodDr = aux->nodSt;
+		aux->nodSt = (*radacina);
+		(*radacina) = aux;
+	}
 }
-
-// procedura de rotire la dreapta
-
 void rotireDreapta(Nod** radacina) {
-	Nod* aux = (*radacina)->NodSt;
-	(*radacina)->NodSt = aux->NodDr;
-	aux->NodDr = (*radacina);
-	(*radacina) = aux;
+	if (*radacina == NULL) return;
+	else {
+		Nod* aux = (*radacina)->nodSt;
+		(*radacina)->nodSt = aux->nodDr;
+		aux->nodDr = (*radacina);
+		(*radacina) = aux;
+	}
 }
-
 
 void adaugaMasinaInArboreEchilibrat(Nod** radacina, Masina masinaNoua) {
 	//adauga o noua masina pe care o primim ca parametru in arbore,
@@ -89,38 +96,32 @@ void adaugaMasinaInArboreEchilibrat(Nod** radacina, Masina masinaNoua) {
 	//dupa o anumita cheie pe care o decideti - poate fi ID
 	Nod* nou = malloc(sizeof(Nod));
 	nou->masina = masinaNoua;
-	nou->NodDr = NULL;
-	nou->NodSt = NULL;
-
-	if (*radacina == NULL) {
-		(*radacina) = nou;
-	}
-	else {
-		if ((*radacina)->masina.id < masinaNoua.id) {
-			adaugaMasinaInArboreEchilibrat(&((*radacina)->NodDr), masinaNoua);
+	nou->nodSt = NULL;
+	nou->nodDr = NULL;
+	if (*radacina) {
+		if ((*radacina)->masina.id > masinaNoua.id) {
+			adaugaMasinaInArboreEchilibrat(&((*radacina)->nodSt), masinaNoua);
 		}
 		else {
-			adaugaMasinaInArboreEchilibrat(&((*radacina)->NodSt), masinaNoua);
+			adaugaMasinaInArboreEchilibrat(&((*radacina)->nodDr), masinaNoua);
 		}
-		int gradEchilibru = calculeazaGE((*radacina));
+		int gradEchilibru = calculareGE(*radacina);
 		if (gradEchilibru == 2) {
-			// avem dezechilibru pe partea dreapta
-			if (calculeazaGE((*radacina)->NodSt) == 1) {
-				rotireDreapta(radacina);
+			if (calculareGE	((*radacina)->nodSt) != 1) {
+				rotireStanga(&((*radacina)->nodSt));
 			}
-			else {
-				rotireStanga(&((*radacina)->NodSt));
-				rotireDreapta(radacina);
-			}
+			rotireDreapta(radacina);
 		}
 		else if (gradEchilibru == -2) {
-			if (calculeazaGE((*radacina)->NodDr) != -1) {
-				rotireDreapta(&((*radacina)->NodDr));
+			if (calculareGE((*radacina)->nodDr) != -1) {
+				rotireDreapta(&((*radacina)->nodDr));
 			}
 			rotireStanga(radacina);
 		}
 	}
-
+	else {
+		(*radacina) = nou;
+	}
 }
 
 Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
@@ -136,41 +137,15 @@ Nod* citireArboreDeMasiniDinFisier(const char* numeFisier) {
 	return radacina;
 }
 
-void afisareMasiniDinArbore(Nod* radacina) {
+void afisareMasiniDinArbore(/*arbore de masini*/) {
 	//afiseaza toate elemente de tip masina din arborele creat
 	//prin apelarea functiei afisareMasina()
 	//parcurgerea arborelui poate fi realizata in TREI moduri
 	//folositi toate cele TREI moduri de parcurgere
 }
 
-void parcurgereRSD(Nod* radacina) {
-	afisareMasina(radacina->masina);
-	parcurgereRSD(radacina->NodSt);
-	parcurgereRSD(radacina->NodDr);
-}
-
-void parcurgereSRD(Nod* radacina) {
-	parcurgereSRD(radacina->NodSt);
-	afisareMasina(radacina->masina);
-	parcurgereSRD(radacina->NodDr);
-}
-
-void parcurgereSDR(Nod* radacina) {
-	parcurgereSDR(radacina->NodSt);
-	parcurgereSDR(radacina->NodDr);
-	afisareMasina(radacina->masina);
-}
-
-void dezalocareArboreDeMasini(Nod** radacina) {
+void dezalocareArboreDeMasini(/*arbore de masini*/) {
 	//sunt dezalocate toate masinile si arborele de elemente
-	if (*radacina) {
-		dezalocareArboreDeMasini((*radacina)->NodSt);
-		dezalocareArboreDeMasini((*radacina)->NodDr);
-		free((*radacina)->masina.model);
-		free((*radacina)->masina.numeSofer);
-		free(*radacina);
-		*radacina = NULL;
-	}
 }
 
 //Preluati urmatoarele functii din laboratorul precedent.

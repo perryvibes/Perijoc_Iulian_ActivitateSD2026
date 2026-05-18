@@ -81,6 +81,9 @@
     <ClCompile Include="ArboreABCAvionBilete.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ArboreAVLPictura.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">
@@ -104,6 +107,9 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="bilete.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="picturi.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

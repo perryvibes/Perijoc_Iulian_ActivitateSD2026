@@ -78,6 +78,9 @@
     <ClCompile Include="HeapCocktail.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ArboreABCAvionBilete.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">
@@ -98,6 +101,9 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="cocktails.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="bilete.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

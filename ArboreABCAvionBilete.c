@@ -32,6 +32,7 @@ BiletAvion citireBiletDinFisier(FILE* file) {
 	token = strtok(NULL, separator);
 	bilet.poartaImbarcare = malloc(sizeof(char) * (1 + strlen(token)));
 	strcpy(bilet.poartaImbarcare, token);
+	token = strtok(NULL, separator);
 	return bilet;
 }
 
@@ -52,10 +53,10 @@ void adaugaBiletInArbore(Nod** arbore, BiletAvion biletNou) {
 		(*arbore) = nou;
 	}
 	else {
-		if ((*arbore)->info.pret > biletNou.pret) {
+		if ((*arbore)->info.id > biletNou.id) {
 			adaugaBiletInArbore(&((*arbore)->nodSt), biletNou);
 		}
-		else {
+		else if ((*arbore)->info.id < biletNou.id) {
 			adaugaBiletInArbore(&((*arbore)->nodDr), biletNou);
 		}
 	}
@@ -72,21 +73,27 @@ Nod* citireArboreDinFisier(const char* numeFisier) {
 }
 
 void afisareInOrdineSRD(Nod* arbore) {
-	afisareInOrdineSRD(arbore->nodSt);
-	afisareBilet(arbore->info);
-	afisareInOrdineSRD(arbore->nodDr);
+	if (arbore) {
+		afisareInOrdineSRD(arbore->nodSt);
+		afisareBilet(arbore->info);
+		afisareInOrdineSRD(arbore->nodDr);
+	}
 }
 
 void afisarePreordineRSD(Nod* arbore) {
-	afisareBilet(arbore->info);
-	afisarePreordineRSD(arbore->nodSt);
-	afisarePreordineRSD(arbore->nodDr);
+	if (arbore) {
+		afisareBilet(arbore->info);
+		afisarePreordineRSD(arbore->nodSt);
+		afisarePreordineRSD(arbore->nodDr);
+	}
 }
 
 void afisarePostordineSDR(Nod* arbore) {
-	afisarePostordineSDR(arbore->nodSt);
-	afisarePostordineSDR(arbore->nodDr);
-	afisareBilet(arbore->info);
+	if (arbore) {
+		afisarePostordineSDR(arbore->nodSt);
+		afisarePostordineSDR(arbore->nodDr);
+		afisareBilet(arbore->info);
+	}
 }
 
 
@@ -97,11 +104,12 @@ void dezalocareArbore(Nod** arbore) {
 		free((*arbore)->info.destinatie);
 		free((*arbore)->info.poartaImbarcare);
 		free((*arbore));
+		(*arbore) = NULL;
 	}
 }
 
 BiletAvion getBiletById(Nod* arbore, int id) {
-	BiletAvion bilet;
+	BiletAvion bilet = {0,0,NULL,NULL};
 	if (arbore) {
 		if (arbore->info.id > id) {
 			bilet = getBiletById(arbore->nodSt, id);
@@ -140,14 +148,13 @@ float calculeazaPretTotal(Nod* arbore) {
 
 float calculeazaPretTotalDestinatie(Nod* arbore, const char* destinatie) {
 	if (arbore) {
-		float st = calculeazaPretTotal(arbore->nodSt, destinatie);
-		float dr = calculeazaPretTotal(arbore->nodDr, destinatie);
+		float st = calculeazaPretTotalDestinatie(arbore->nodSt, destinatie);
+		float dr = calculeazaPretTotalDestinatie(arbore->nodDr, destinatie);
+		float sum = 0;
 		if (strcmp(arbore->info.destinatie, destinatie) == 0) {
-			return arbore->info.pret;
+			sum += arbore->info.pret;
 		}
-		else {
-			return st + dr;
-		}
+		return sum + st + dr;
 	}
 	else {
 		return 0;
@@ -157,8 +164,28 @@ float calculeazaPretTotalDestinatie(Nod* arbore, const char* destinatie) {
 int main() {
 
 	Nod* arbore = citireArboreDinFisier("bilete.txt");
-	afisareInOrdineSRD(arbore);
+	afisarePostordineSDR(arbore);
+	printf("\n=====================\n");
+	
+	BiletAvion b = getBiletById(arbore, 3);
+	afisareBilet(b);
 
+	printf("\n=====================\n");
+
+	printf("\nNr noduri: %d", determinaNrNoduri(arbore));
+
+	printf("\n=====================\n");
+
+	float total = calculeazaPretTotal(arbore);
+	printf("\n Pret total: %.2f", total);
+
+	printf("\n=====================\n");
+
+	printf("Pret total Roma: %.2f", calculeazaPretTotalDestinatie(arbore, "Roma"));
+
+	printf("\n=====================\n");
+
+	dezalocareArbore(&arbore);
 
 	return 0;
 }

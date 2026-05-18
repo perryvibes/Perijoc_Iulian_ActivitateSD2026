@@ -32,16 +32,17 @@ Cocktail citesteCocktailDinFisier(FILE* file) {
 	char buffer[100];
 	char delimitator[3] = ",\n";
 	fgets(buffer, 100, file);
-	char* token = strtok(buffer, delimitator);
+	char* token;
+	token = strtok(buffer, delimitator);
 	cocktail.id = atoi(token);
-	token = strtok(token, NULL);
+	token = strtok(NULL, delimitator);
 	cocktail.nrIngrediente = atoi(token);
-	token = strtok(token, NULL);
+	token = strtok(NULL, delimitator);
 	cocktail.pret = atof(token);
-	token = strtok(token, NULL);
+	token = strtok(NULL, delimitator);
 	cocktail.denumire = malloc((strlen(token) + 1) * sizeof(char));
 	strcpy(cocktail.denumire, token);
-	token = strtok(token, NULL);
+	token = strtok(NULL, delimitator);
 	cocktail.origine = malloc((strlen(token) + 1) * sizeof(char));
 	strcpy(cocktail.origine, token);
 	return cocktail;
@@ -61,11 +62,7 @@ void filtreazaHeap(Heap heap, int pozNod) {
 	int pozMax = pozNod;
 	if (pozSt < heap.nrCocktails && heap.vector[pozSt].id > heap.vector[pozMax].id) {
 		pozMax = pozSt;
-	}
-	if (pozSt < heap.nrCocktails && heap.vector[pozSt].id > heap.vector[pozMax].id) {
-		pozMax = pozSt;
-	}
-	else if (pozDr < heap.nrCocktails && heap.vector[pozDr].id > heap.vector[pozMax].id) {
+	} else if (pozDr < heap.nrCocktails && heap.vector[pozDr].id > heap.vector[pozMax].id) {
 		pozMax = pozDr;
 	}
 	if (pozMax != pozNod) {
@@ -103,6 +100,7 @@ Heap citesteHeapDinFisier(const char* numeFisier) {
 	for (int i = (heap.nrCocktails - 2) / 2; i >= 0; i--) {
 		filtreazaHeap(heap, i);
 	}
+	return heap;
 }
 
 Cocktail extrageCocktail(Heap* heap) {
@@ -119,12 +117,31 @@ Cocktail extrageCocktail(Heap* heap) {
 	return aux;
 }
 
+void dezalocareHeap(Heap* heap) {
+	if (heap) {
+		for (int i = 0; i < heap->lungime; i++) {
+			free(heap->vector[i].denumire);
+			free(heap->vector[i].origine);
+		}
+		free(heap->vector);
+		heap->vector = NULL;
+		heap->lungime = 0;
+		heap->nrCocktails = 0;
+	}
+}
+
 int main() {
 	Heap h = citesteHeapDinFisier("cocktails.txt");
 	afiseazaHeap(h);
+
 	printf("\n=================\n");
+	afiseazaHeapAscuns(h);
+
 	printf("\n=================\n");
+	Cocktail c1 = extrageCocktail(&h);
+	afisareCocktail(c1);
+
 	printf("\n=================\n");
-	printf("\n=================\n");
-	printf("\n=================\n");
+	dezalocareHeap(&h);
+	return 0;
 }

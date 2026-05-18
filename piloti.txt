@@ -1,0 +1,7 @@
+1,80,Red,4
+2,73,Blue,2
+3,62,Green,1
+4,84,Eagles,6
+5,56,Lions,2
+6,75,Busters,7
+7,85,Aviators,3

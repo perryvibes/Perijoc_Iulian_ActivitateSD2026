@@ -84,6 +84,9 @@
     <ClCompile Include="ArboreAVLPictura.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PilotiArbore.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">
@@ -110,6 +113,9 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="picturi.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="piloti.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

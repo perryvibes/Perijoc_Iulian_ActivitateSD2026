@@ -136,6 +136,7 @@
     <ClCompile Include="LSMoneda.c" />
     <ClCompile Include="Magazin.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="PilotiArbore.c" />
     <ClCompile Include="recapitulareArboreABCSablon.c" />
     <ClCompile Include="RecapitulareAVLSablon.c" />
     <ClCompile Include="recapitulareHeapSablon.c" />
@@ -162,6 +163,7 @@
     <Text Include="masiniUnaSingura.txt" />
     <Text Include="muchii.txt" />
     <Text Include="picturi.txt" />
+    <Text Include="piloti.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

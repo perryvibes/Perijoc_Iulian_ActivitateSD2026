@@ -30,7 +30,7 @@ Pictura citestePicturaDinFisier(FILE* file) {
 	Pictura pictura;
 	char buffer[100];
 	char sep[3] = ",\n";
-	fgets(buffer, 100, sep);
+	fgets(buffer, 100, file);
 	char* token = strtok(buffer, sep);
 	pictura.id = atoi(token);
 	token = strtok(NULL, sep);
@@ -47,11 +47,11 @@ Pictura citestePicturaDinFisier(FILE* file) {
 
 int calculInaltime(Nod* radacina) {
 	if (radacina) {
-		return 1 + max(calculInaltime(radacina->nodSt), calculaInaltime(radacina->nodDr));
+		return 1 + max(calculInaltime(radacina->nodSt), calculInaltime(radacina->nodDr));
 	}
 }
 
-char GE(Nod* radacina) {
+int GE(Nod* radacina) {
 	if (radacina) {
 		return calculInaltime(radacina->nodSt) - calculInaltime(radacina->nodDr);
 	}
@@ -159,4 +159,9 @@ float calculeazaPretTotalCentru(Nod* arbore, const char* centru) {
 int main() {
 	Nod* arbore = citesteArboreDinFisier("picturi.txt");
 	afisareArboreAVL(arbore);
+
+	dezalocaArbore(&arbore);
+	printf("\n==========\n");
+
+
 }

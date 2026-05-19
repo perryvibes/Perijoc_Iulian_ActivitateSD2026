@@ -132,6 +132,7 @@
     <ClCompile Include="Farmacie.c" />
     <ClCompile Include="HashTable_Recapitulare.c" />
     <ClCompile Include="HeapCocktail.c" />
+    <ClCompile Include="HeapPacient.c" />
     <ClCompile Include="ListeSimple_recap.c" />
     <ClCompile Include="LSMoneda.c" />
     <ClCompile Include="Magazin.c" />
@@ -162,6 +163,7 @@
     <Text Include="masiniGol.txt" />
     <Text Include="masiniUnaSingura.txt" />
     <Text Include="muchii.txt" />
+    <Text Include="pacienti.txt" />
     <Text Include="picturi.txt" />
     <Text Include="piloti.txt" />
   </ItemGroup>

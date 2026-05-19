@@ -87,6 +87,9 @@
     <ClCompile Include="PilotiArbore.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HeapPacient.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="masini.txt">
@@ -116,6 +119,9 @@
       <Filter>Source Files</Filter>
     </Text>
     <Text Include="piloti.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="pacienti.txt">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>

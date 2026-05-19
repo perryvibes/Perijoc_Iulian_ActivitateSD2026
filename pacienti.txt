@@ -1,0 +1,4 @@
+1,andrei,44,5,tuse
+2,daniel,64,2,raceala
+3,george,23,6,plamani
+4,lucian,35,3,inflamare

@@ -1,0 +1,4 @@
+124,Wizz,4.5,Cypru,200
+424,RyanAir,3.5,Spania,200
+512,TAROM,7.2,Portugalia,200
+735,QatarAir,2,Italia,200

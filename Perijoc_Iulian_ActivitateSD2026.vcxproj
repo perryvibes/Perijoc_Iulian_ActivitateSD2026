@@ -153,6 +153,7 @@
     <ClCompile Include="Seminar7.c" />
     <ClCompile Include="Seminar8.c" />
     <ClCompile Include="seminar9.c" />
+    <ClCompile Include="ZborAVL.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="bilete.txt" />
@@ -168,6 +169,7 @@
     <Text Include="picturi.txt" />
     <Text Include="piloti.txt" />
     <Text Include="produse.txt" />
+    <Text Include="zboruri.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

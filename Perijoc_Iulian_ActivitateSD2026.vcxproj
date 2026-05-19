@@ -138,6 +138,7 @@
     <ClCompile Include="Magazin.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="PilotiArbore.c" />
+    <ClCompile Include="ProduseABC.c" />
     <ClCompile Include="recapitulareArboreABCSablon.c" />
     <ClCompile Include="RecapitulareAVLSablon.c" />
     <ClCompile Include="recapitulareHeapSablon.c" />
@@ -166,6 +167,7 @@
     <Text Include="pacienti.txt" />
     <Text Include="picturi.txt" />
     <Text Include="piloti.txt" />
+    <Text Include="produse.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

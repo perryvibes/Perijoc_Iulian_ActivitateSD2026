@@ -1,0 +1,4 @@
+53254,banane,5,fructe,42
+24352,portocale,13,fructe,150
+12345,castraveti,3,legume,200
+33251,cana,30,casa,56

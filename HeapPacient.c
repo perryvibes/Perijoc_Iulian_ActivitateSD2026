@@ -76,13 +76,13 @@ void filtreazaHeap(Heap heap, int pozNod) {
 }
 
 Heap citireHeapFisier(const char* numeFisier) {
-	Heap heap = initializareHeap(10);
+	Heap heap = initializareHeap(4);
 	FILE* fptr = fopen(numeFisier, "r");
 	while (!feof(fptr)) {
 		heap.vector[heap.nrPacienti++] = citirePacientFisier(fptr);
 	}
 	fclose(fptr);
-	for (int i = (heap.nrPacienti - 2) / 2; i >= 0; i++) {
+	for (int i = (heap.nrPacienti - 2) / 2; i >= 0; i--) {
 		filtreazaHeap(heap, i);
 	}
 	return heap;
@@ -101,7 +101,7 @@ Pacient extragePacient(Heap* heap) {
 		heap->vector[0] = heap->vector[heap->nrPacienti - 1];
 		heap->vector[heap->nrPacienti - 1] = aux;
 		heap->nrPacienti--;
-		for (int i = (heap->nrPacienti - 2) / 2; i >= 0; i++) {
+		for (int i = (heap->nrPacienti - 2) / 2; i >= 0; i--) {
 			filtreazaHeap(*heap, i);
 		}
 		return aux;
@@ -112,7 +112,7 @@ Pacient extragePacient(Heap* heap) {
 }
 
 void dezalocare(Heap* heap) {
-	if (heap) {
+	if (heap->lungime > 0) {
 		for (int i = 0; i < heap->lungime; i++) {
 			free(heap->vector[i].nume);
 			free(heap->vector[i].problema);
@@ -133,7 +133,7 @@ int main() {
 	printf("\n========================================\n");
 	extragePacient(&heap);
 	extragePacient(&heap);
-	//afisareHeap(heap);
+	afisareHeap(heap);
 	printf("\n========================================\n");
 
 	dezalocare(&heap);
